@@ -3,6 +3,7 @@ plugins {
     kotlin("native.cocoapods")
     id("com.android.library")
     id("org.jetbrains.compose")
+    id("io.github.skeptick.libres")
 }
 
 kotlin {
@@ -32,6 +33,22 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material)
+                implementation(libs.datetime)
+
+                implementation(libs.koin.core)
+
+                implementation(libs.libres.compose)
+                implementation(libs.odyssey.core)
+                implementation(libs.odyssey.compose)
+
+                implementation(libs.kviewmodel.core)
+                implementation(libs.kviewmodel.compose)
+                implementation(libs.kviewmodel.odyssey)
+                implementation(libs.koin.core)
+
+                implementation(libs.imageloader)
+//                implementation(projects.res)
+
             }
         }
         val androidMain by getting {
@@ -72,4 +89,10 @@ android {
     kotlin {
         jvmToolchain(11)
     }
+}
+libres {
+    generatedClassName = "Res" // "Res" by default
+    generateNamedArguments = true // false by default
+    baseLocaleLanguageCode = "ru" // "en" by default
+    camelCaseNamesForAppleFramework = true // false by default
 }

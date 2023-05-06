@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TWallet</string>
+    <string name="create_wallet">Create wallet</string>
+    <string name="input_seed">Input seed</string>
+</resources>
