@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">TWallet</string>
-    <string name="create_wallet">Создать кошелёк</string>
-    <string name="input_seed">Импортировать кошелёк</string>
+    <string name="new_wallet">Новый кошелёк</string>
+    <string name="create_wallet">Создать новый кошелёк</string>
+    <string name="import_wallet">Импорт кошелька</string>
+    <string name="input_seed">Ввести фразу</string>
+    <string name="menu_wallet">Кошелёк</string>
+    <string name="menu_settings">Настройки</string>
 </resources>

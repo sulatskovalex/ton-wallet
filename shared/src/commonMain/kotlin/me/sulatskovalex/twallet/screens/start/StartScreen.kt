@@ -1,6 +1,7 @@
 package me.sulatskovalex.twallet.screens.start
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -24,10 +26,10 @@ fun StartScreen(
     onCreateWalletClick: () -> Unit,
     onInputSeedClick: () -> Unit,
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)) {
 
         Image(
-            modifier = Modifier.size(80.dp).align(Alignment.Center),
+            modifier = Modifier.size(120.dp).align(Alignment.Center),
             painter = painterResource(Res.image.ic_ton),
             contentDescription = null,
         )
@@ -37,19 +39,23 @@ fun StartScreen(
                 .padding(start = 16.dp, end = 16.dp)
                 .align(Alignment.BottomCenter)
         ) {
+
             OutlinedButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onCreateWalletClick,
             ) {
                 Text(Res.string.create_wallet)
             }
+
             Spacer(Modifier.height(8.dp))
+
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onInputSeedClick,
             ) {
                 Text(Res.string.input_seed)
             }
+
             Spacer(Modifier.height(16.dp))
         }
     }

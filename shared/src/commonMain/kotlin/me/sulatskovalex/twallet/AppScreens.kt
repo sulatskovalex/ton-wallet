@@ -4,5 +4,6 @@ enum class AppScreens {
     Splash,
     Start,
     CreateWallet,
-    InputSeed
+    InputSeed,
+    Home,
 }

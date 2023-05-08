@@ -33,8 +33,8 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material)
-                implementation(libs.datetime)
 
+                implementation(libs.datetime)
                 implementation(libs.koin.core)
 
                 implementation(libs.libres.compose)
@@ -44,7 +44,6 @@ kotlin {
                 implementation(libs.kviewmodel.core)
                 implementation(libs.kviewmodel.compose)
                 implementation(libs.kviewmodel.odyssey)
-                implementation(libs.koin.core)
 
                 implementation(libs.imageloader)
                 implementation(projects.ton)

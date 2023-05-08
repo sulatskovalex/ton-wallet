@@ -1,8 +1,12 @@
 package me.sulatskovalex.twallet
 
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import me.sulatskovalex.twallet.screens.SplashScreen
+import me.sulatskovalex.twallet.screens.home.HomeScreen
 import me.sulatskovalex.twallet.screens.start.StartScreen
+import me.sulatskovalex.twallet.screens.start.create.CreateWalletScreen
+import me.sulatskovalex.twallet.screens.start.input.InputSeedScreen
 import ru.alexgladkov.odyssey.compose.extensions.screen
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.setup.OdysseyConfiguration
@@ -14,27 +18,71 @@ fun App(
     configuration: OdysseyConfiguration,
     onFinish: () -> Unit
 ) {
-    setNavigationContent(
-        configuration = configuration,
-        onApplicationFinish = onFinish,
-    ) {
-        screen(AppScreens.Splash.name) {
-            val current = LocalRootController.current
-            SplashScreen(
-                onGoToMain = {
-                    current.launch(
-                        screen = AppScreens.Start.name,
-                        launchFlag = LaunchFlag.SingleNewTask,
-                    )
-                }
-            )
-        }
+    MaterialTheme {
+        setNavigationContent(
+            configuration = configuration,
+            onApplicationFinish = onFinish,
+        ) {
+            screen(AppScreens.Splash.name) {
+                val controller = LocalRootController.current
+                SplashScreen(
+                    onGoToStart = {
+                        controller.launch(
+                            screen = AppScreens.Start.name,
+                            launchFlag = LaunchFlag.SingleNewTask,
+                        )
+                    },
+                    onGoToHome = {
+                        controller.launch(
+                            screen = AppScreens.Home.name,
+                            launchFlag = LaunchFlag.SingleNewTask,
+                        )
+                    },
+                )
+            }
 
-        screen(AppScreens.Start.name) {
-            StartScreen(
-                onCreateWalletClick = {},
-                onInputSeedClick = {}
-            )
+            screen(AppScreens.Start.name) {
+                val controller = LocalRootController.current
+                StartScreen(
+                    onCreateWalletClick = {
+                        controller.launch(screen = AppScreens.CreateWallet.name)
+                    },
+                    onInputSeedClick = {
+                        controller.launch(screen = AppScreens.InputSeed.name)
+                    }
+                )
+            }
+            screen(AppScreens.CreateWallet.name) {
+                val controller = LocalRootController.current
+                CreateWalletScreen(
+                    onGoToHome = {
+                        controller.launch(
+                            screen = AppScreens.Home.name,
+                            launchFlag = LaunchFlag.SingleNewTask,
+                        )
+                    },
+                    onBackClick = {
+                        controller.popBackStack()
+                    },
+                )
+            }
+            screen(AppScreens.InputSeed.name) {
+                val controller = LocalRootController.current
+                InputSeedScreen(
+                    onGoToHome = {
+                        controller.launch(
+                            screen = AppScreens.Home.name,
+                            launchFlag = LaunchFlag.SingleNewTask,
+                        )
+                    },
+                    onBackClick = {
+                        controller.popBackStack()
+                    },
+                )
+            }
+            screen(AppScreens.Home.name) {
+                HomeScreen()
+            }
         }
     }
 }
