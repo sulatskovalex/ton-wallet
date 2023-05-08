@@ -37,6 +37,5 @@ fun SplashScreen(
                 contentDescription = null,
             )
         }
-
     }
 }

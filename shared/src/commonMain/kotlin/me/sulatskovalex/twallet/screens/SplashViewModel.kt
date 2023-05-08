@@ -1,19 +1,34 @@
 package me.sulatskovalex.twallet.screens
 
 import com.adeo.kviewmodel.KViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import me.sulatskovalex.twallet.domain.repositories.WalletRepository
 
 class SplashViewModel(
-    val walletRepository: WalletRepository,
+    private val walletRepository: WalletRepository,
 ) : KViewModel() {
-    suspend inline fun onLaunch(onGoToStart: () -> Unit, onGoToHome: () -> Unit) {
-        delay(1000)
-        if (walletRepository.isAnyWalletExists()) {
-            onGoToHome.invoke()
-        } else {
-            onGoToStart.invoke()
+
+    fun onLaunch(onGoToStart: () -> Unit, onGoToHome: () -> Unit) {
+        viewModelScope.launch {
+            listOf(
+                async {
+                    delay(500)
+                    false
+                },
+                async {
+                    walletRepository.isAnyWalletExists()
+                }).awaitAll()
+                .contains(true)
+                .let {
+                    if (it) {
+                        onGoToHome.invoke()
+                    } else {
+                        onGoToStart.invoke()
+                    }
+                }
         }
     }
-
 }

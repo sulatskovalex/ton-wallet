@@ -7,6 +7,7 @@ import me.sulatskovalex.twallet.remote.di.remoteModule
 import me.sulatskovalex.twallet.screens.SplashViewModel
 import me.sulatskovalex.twallet.screens.home.home.assets.AssetsViewModel
 import me.sulatskovalex.twallet.screens.home.settings.SettingsViewModel
+import me.sulatskovalex.twallet.screens.start.StartViewModel
 import me.sulatskovalex.twallet.screens.start.create.CreateWalletViewModel
 import me.sulatskovalex.twallet.screens.start.input.InputSeedViewModel
 import org.koin.core.context.startKoin
@@ -15,6 +16,8 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 object TWalletDI {
+
+    fun startDI() = startDI(*emptyArray())
 
     fun startDI(vararg modules: Module) =
         startKoin {
@@ -28,6 +31,7 @@ object TWalletDI {
                 module {
                     single { WalletRepository(get(), get()) }
                     factory { SplashViewModel(get()) }
+                    factory { StartViewModel() }
                     factory { InputSeedViewModel(get()) }
                     factory { CreateWalletViewModel(get()) }
                     factory { AssetsViewModel(get()) }
