@@ -4,6 +4,7 @@
     <string name="new_wallet">New wallet</string>
     <string name="import_wallet">Import wallet</string>
     <string name="input_seed">Input seed</string>
+    <string name="next">Next</string>
     <string name="menu_wallet">Wallet</string>
     <string name="menu_settings">Settings</string>
 </resources>

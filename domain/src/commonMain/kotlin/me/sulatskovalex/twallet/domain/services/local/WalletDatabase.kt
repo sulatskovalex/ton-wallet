@@ -8,5 +8,5 @@ interface WalletDatabase {
     suspend fun selectWallets(): List<Wallet>
     suspend fun selectMainWalletAddress(): String?
     suspend fun updateWallet(accountAddressHex: String, amount: Long, )
-    suspend fun deleteWallet()
+    suspend fun deleteCurrentWallet()
 }

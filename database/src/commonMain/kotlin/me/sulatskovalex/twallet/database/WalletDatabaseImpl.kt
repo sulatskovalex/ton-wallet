@@ -61,7 +61,7 @@ class WalletDatabaseImpl(
         }
     }
 
-    override suspend fun deleteWallet() {
+    override suspend fun deleteCurrentWallet() {
         withContext(Dispatchers.Default) {
             walletsDao.selectMainWallet().executeAsOneOrNull()?.let { w ->
                 walletsDao.deleteWallet(w.accountAddressHex)

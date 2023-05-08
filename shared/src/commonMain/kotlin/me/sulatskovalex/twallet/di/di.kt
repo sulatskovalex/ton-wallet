@@ -5,6 +5,8 @@ import me.sulatskovalex.twallet.domain.di.domainModule
 import me.sulatskovalex.twallet.domain.repositories.WalletRepository
 import me.sulatskovalex.twallet.remote.di.remoteModule
 import me.sulatskovalex.twallet.screens.SplashViewModel
+import me.sulatskovalex.twallet.screens.home.home.assets.AssetsViewModel
+import me.sulatskovalex.twallet.screens.home.settings.SettingsViewModel
 import me.sulatskovalex.twallet.screens.start.create.CreateWalletViewModel
 import me.sulatskovalex.twallet.screens.start.input.InputSeedViewModel
 import org.koin.core.context.startKoin
@@ -28,6 +30,8 @@ object TWalletDI {
                     factory { SplashViewModel(get()) }
                     factory { InputSeedViewModel(get()) }
                     factory { CreateWalletViewModel(get()) }
+                    factory { AssetsViewModel(get()) }
+                    factory { SettingsViewModel(get()) }
                 },
             )
         }

@@ -1,4 +1,4 @@
-package me.sulatskovalex.twallet.domain.di
+package me.sulatskovalex.twallet.domain.common
 
 import org.koin.mp.KoinPlatformTools
 

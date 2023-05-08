@@ -4,5 +4,5 @@ import me.sulatskovalex.twallet.domain.models.Wallet
 
 interface TonClient {
     suspend fun generateWords(): List<String>
-    suspend fun generateWords(words: List<String>): Wallet
+    suspend fun createWallet(words: List<String>): Wallet
 }

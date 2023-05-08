@@ -11,15 +11,15 @@ class WalletRepository(
     suspend fun generateWords(): List<String> =
         tonClient.generateWords()
 
-    suspend fun generateWords(words: List<String>) {
-        val wallet = tonClient.generateWords(words)
+    suspend fun createWallet(words: List<String>) {
+        val wallet = tonClient.createWallet(words)
         walletDatabase.insertWallet(wallet)
     }
 
     suspend fun isAnyWalletExists(): Boolean =
-        walletDatabase.selectMainWalletAddress() != null
+        !walletDatabase.selectMainWalletAddress().isNullOrEmpty()
 
-    suspend fun exitWallet() {
-        walletDatabase.deleteWallet()
+    suspend fun deleteCurrentWallet() {
+        walletDatabase.deleteCurrentWallet()
     }
 }

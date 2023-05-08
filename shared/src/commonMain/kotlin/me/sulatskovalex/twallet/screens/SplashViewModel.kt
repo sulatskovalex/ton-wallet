@@ -9,10 +9,10 @@ class SplashViewModel(
 ) : KViewModel() {
     suspend inline fun onLaunch(onGoToStart: () -> Unit, onGoToHome: () -> Unit) {
         delay(1000)
-        if (true) {
-            onGoToStart.invoke()
-        } else {
+        if (walletRepository.isAnyWalletExists()) {
             onGoToHome.invoke()
+        } else {
+            onGoToStart.invoke()
         }
     }
 

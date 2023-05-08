@@ -81,7 +81,13 @@ fun App(
                 )
             }
             screen(AppScreens.Home.name) {
-                HomeScreen()
+                val controller = LocalRootController.current
+                HomeScreen(onGotoSplash = {
+                    controller.launch(
+                        screen = AppScreens.Splash.name,
+                        launchFlag = LaunchFlag.SingleNewTask,
+                    )
+                })
             }
         }
     }
