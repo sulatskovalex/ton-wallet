@@ -43,7 +43,6 @@ fun InputSeedScreen(
                                 contentDescription = ""
                             )
                         }
-
                     },
                 )
             }

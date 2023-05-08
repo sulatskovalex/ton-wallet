@@ -9,10 +9,6 @@ struct iOSApp: App {
         diManager.startDI()
     }
 
-    deinit {
-        diManager.stopDI()
-    }
-
 	var body: some Scene {
 		WindowGroup {
 			ContentView()

@@ -10,6 +10,8 @@ import org.koin.mp.KoinPlatformTools
 
 object TWalletDI {
 
+    fun startDI() = startDI(emptyList())
+
     fun startDI(modules: List<Module>) =
         startKoin {
             modules(
