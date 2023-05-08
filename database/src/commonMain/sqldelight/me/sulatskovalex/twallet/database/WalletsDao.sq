@@ -1,0 +1,26 @@
+CREATE TABLE wallets (
+  accountAddressHex TEXT NOT NULL PRIMARY KEY,
+  accountAddressFriendly TEXT NOT NULL,
+  amount INTEGER NOT NULL,
+  privateKey BLOB NOT NULL,
+  publicKey BLOB NOT NULL,
+  isMain INTEGER NOT NULL
+);
+
+insertWallet:
+INSERT OR REPLACE INTO wallets(accountAddressHex, accountAddressFriendly, amount, privateKey, publicKey, isMain) VALUES (?, ?, ?, ?, ?, ?);
+
+selectWallets:
+SELECT accountAddressHex, accountAddressFriendly, amount, privateKey, publicKey, isMain FROM wallets;
+
+selectMainWallet:
+SELECT accountAddressHex, accountAddressFriendly, amount, privateKey, publicKey, isMain FROM wallets WHERE isMain = 1;
+
+selectMainWalletAddressHex:
+SELECT accountAddressHex FROM wallets WHERE isMain = 1;
+
+updateWallet:
+UPDATE wallets SET amount = ? WHERE accountAddressFriendly = ?;
+
+deleteWallet:
+DELETE FROM wallets WHERE accountAddressHex = ?;

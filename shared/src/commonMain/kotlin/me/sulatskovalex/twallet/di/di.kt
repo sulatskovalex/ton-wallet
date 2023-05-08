@@ -1,33 +1,38 @@
 package me.sulatskovalex.twallet.di
 
+import me.sulatskovalex.twallet.database.di.databaseModule
+import me.sulatskovalex.twallet.domain.di.domainModule
+import me.sulatskovalex.twallet.domain.repositories.WalletRepository
+import me.sulatskovalex.twallet.remote.di.remoteModule
 import me.sulatskovalex.twallet.screens.SplashViewModel
 import me.sulatskovalex.twallet.screens.start.create.CreateWalletViewModel
 import me.sulatskovalex.twallet.screens.start.input.InputSeedViewModel
 import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
 import org.koin.core.module.Module
 import org.koin.dsl.module
-import org.koin.mp.KoinPlatformTools
 
 object TWalletDI {
 
-    fun startDI() = startDI(emptyList())
-
-    fun startDI(modules: List<Module>) =
+    fun startDI(vararg modules: Module) =
         startKoin {
+            modules(*modules)
+            modules(
+                domainModule(),
+                databaseModule(),
+                remoteModule(),
+            )
             modules(
                 module {
-                    factory { SplashViewModel() }
-                    factory { InputSeedViewModel() }
-                    factory { CreateWalletViewModel() }
+                    single { WalletRepository(get(), get()) }
+                    factory { SplashViewModel(get()) }
+                    factory { InputSeedViewModel(get()) }
+                    factory { CreateWalletViewModel(get()) }
                 },
             )
-            modules(modules)
         }
 
     fun stopDI() {
-        KoinPlatformTools.defaultContext().stopKoin()
+        stopKoin()
     }
 }
-
-inline fun <reified T> inject(): T =
-    KoinPlatformTools.defaultContext().get().get()

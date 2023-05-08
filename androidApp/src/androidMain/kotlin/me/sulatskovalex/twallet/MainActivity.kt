@@ -10,11 +10,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         TWalletDI.startDI(
-            listOf(
-                module {
-                    single { applicationContext }
-                }
-            ),
+            module {
+                single { applicationContext }
+            },
         )
         setContent {
             MainView(this)

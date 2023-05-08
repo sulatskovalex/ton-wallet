@@ -46,7 +46,9 @@ kotlin {
                 implementation(libs.kviewmodel.odyssey)
 
                 implementation(libs.imageloader)
-                implementation(projects.ton)
+                implementation(projects.domain)
+                implementation(projects.database)
+                implementation(projects.remote)
             }
         }
         val androidMain by getting {
