@@ -5,6 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import me.sulatskovalex.twallet.providers.DisplaySize
 import me.sulatskovalex.twallet.providers.LocalDisplaySize
+import me.sulatskovalex.twallet.providers.LocalPlatform
+import me.sulatskovalex.twallet.providers.Platform
 import me.sulatskovalex.twallet.screens.SplashScreen
 import me.sulatskovalex.twallet.screens.home.HomeScreen
 import me.sulatskovalex.twallet.screens.start.StartScreen
@@ -20,11 +22,13 @@ import ru.alexgladkov.odyssey.core.LaunchFlag
 fun App(
     configuration: OdysseyConfiguration,
     displaySize: DisplaySize,
+    platform: Platform,
     onFinish: () -> Unit
 ) {
     MaterialTheme {
         CompositionLocalProvider(
             LocalDisplaySize provides displaySize,
+            LocalPlatform provides platform,
         ) {
             setNavigationContent(
                 configuration = configuration,

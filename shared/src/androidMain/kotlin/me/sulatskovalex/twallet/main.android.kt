@@ -4,6 +4,7 @@ import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import me.sulatskovalex.twallet.providers.DisplaySize
+import me.sulatskovalex.twallet.providers.Platform
 import ru.alexgladkov.odyssey.compose.setup.OdysseyConfiguration
 import ru.alexgladkov.odyssey.compose.setup.StartScreen
 
@@ -17,5 +18,6 @@ fun MainView(activity: ComponentActivity) =
         displaySize = LocalConfiguration.current.let {
             DisplaySize(it.screenWidthDp, it.screenHeightDp)
         },
+        platform = Platform.Android,
         onFinish = activity::finish,
     )
