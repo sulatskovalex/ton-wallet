@@ -9,10 +9,19 @@ import org.ton.block.AddrVar
 import org.ton.contract.wallet.WalletV4R2Contract
 import org.ton.crypto.Ed25519
 import org.ton.mnemonic.Mnemonic
+import kotlin.random.Random
 
 internal class TonClientImpl(
     private val networkSwitcher: NetworkSwitcher
 ) : TonClient {
+
+    override suspend fun randomWords(): List<String> = buildList {
+        val mnemonicWords = Mnemonic.mnemonicWords()
+        val random = Random.Default
+        (0 until 24).forEach {
+            add(mnemonicWords[random.nextInt(0, mnemonicWords.size)])
+        }
+    }
 
     override suspend fun generateWords(): List<String> =
         Mnemonic.generate()

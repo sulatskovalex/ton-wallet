@@ -11,6 +11,9 @@ class WalletRepository(
     suspend fun generateWords(): List<String> =
         tonClient.generateWords()
 
+    suspend fun randomWords(): List<String> =
+        tonClient.randomWords()
+
     suspend fun createWallet(words: List<String>) {
         val wallet = tonClient.createWallet(words)
         walletDatabase.insertWallet(wallet)

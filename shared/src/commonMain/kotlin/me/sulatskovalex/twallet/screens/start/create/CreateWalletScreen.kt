@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import me.sulatskovalex.twallet.base.SafeAreaScreen
 import me.sulatskovalex.twallet.common.Res
 import me.sulatskovalex.twallet.providers.appColors
+import kotlin.random.Random
 
 @Composable
 fun CreateWalletScreen(
@@ -98,7 +100,7 @@ fun CreateWalletScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .scrollable(rememberScrollState(), Orientation.Vertical),
+                            .scrollable(rememberScrollState(), Orientation.Vertical)
                     ) {
                         (0 until 12).forEach { index ->
                             DoubleWordItem(
@@ -107,6 +109,11 @@ fun CreateWalletScreen(
                                     top = 4.dp,
                                     bottom = 4.dp,
                                     end = 24.dp
+                                ).alpha(
+                                    if (state.isLoading)
+                                        Random.Default.nextInt(from = 0, until = 100) / 100f
+                                    else
+                                        1f
                                 ),
                                 firstIndex = index,
                                 firstWord = state.words[index],

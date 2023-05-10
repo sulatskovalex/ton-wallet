@@ -1,5 +1,6 @@
 package me.sulatskovalex.twallet.screens.start
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -49,7 +50,9 @@ fun StartScreen(
                     onClick = onCreateWalletClick,
                     colors = ButtonDefaults.outlinedButtonColors(
                         backgroundColor = appColors.buttonOutlineBackground,
-                    )
+                    ),
+                    border = BorderStroke(1.dp, appColors.surface)
+
                 ) {
                     Text(
                         text = Res.string.create_wallet,

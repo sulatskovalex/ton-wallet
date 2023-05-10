@@ -18,6 +18,11 @@ data class State(
             words = words,
         )
 
+    fun randomWords(words: List<String>): State =
+        copy(
+            words = words,
+        )
+
     fun error(): State =
         copy(
             isLoading = false,
