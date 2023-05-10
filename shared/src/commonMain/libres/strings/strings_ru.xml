@@ -4,6 +4,7 @@
     <string name="create_wallet">Создать новый кошелёк</string>
     <string name="import_wallet">Импорт кошелька</string>
     <string name="input_seed">Ввести фразу</string>
+    <string name="retry">Повторить</string>
     <string name="next">Продолжить</string>
     <string name="menu_wallet">Кошелёк</string>
     <string name="menu_settings">Настройки</string>

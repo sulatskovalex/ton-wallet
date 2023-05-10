@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -19,21 +19,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
-import me.sulatskovalex.twallet.base.Screen
+import me.sulatskovalex.twallet.base.SafeAreaScreen
 import me.sulatskovalex.twallet.common.Res
+import me.sulatskovalex.twallet.providers.appColors
 
 @Composable
 fun InputSeedScreen(
     onGoToHome: () -> Unit,
     onBackClick: () -> Unit,
-) {
-    Screen<InputSeedViewModel> { viewModel ->
+) =
+    SafeAreaScreen<InputSeedViewModel> { viewModel ->
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(Res.string.import_wallet)
+                        Text(
+                            text = Res.string.import_wallet,
+                            color = appColors.primaryText,
+                        )
                     },
                     modifier = Modifier.fillMaxWidth(),
                     navigationIcon = {
@@ -44,22 +48,29 @@ fun InputSeedScreen(
                             )
                         }
                     },
+                    backgroundColor = appColors.surface,
                 )
-            }
+            },
+            backgroundColor = appColors.background,
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(all = 16.dp)
-                    .background(MaterialTheme.colors.background),
+                    .background(appColors.background),
             ) {
                 Button(
                     onClick = onGoToHome,
-                    modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter)
+                    modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = appColors.buttonBackground,
+                    )
                 ) {
-                    Text(Res.string.input_seed)
+                    Text(
+                        text = Res.string.next,
+                        color = appColors.buttonText
+                    )
                 }
             }
         }
     }
-}

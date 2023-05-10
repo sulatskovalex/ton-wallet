@@ -10,7 +10,7 @@ data class DisplaySize(
     val heightDp: Int,
 )
 
-val LocalDisplaySize = staticCompositionLocalOf<DisplaySize> { error("") }
+val LocalDisplaySize = staticCompositionLocalOf<DisplaySize> { error("display size required") }
 
 val displaySize: DisplaySize
     @Composable get() = LocalDisplaySize.current

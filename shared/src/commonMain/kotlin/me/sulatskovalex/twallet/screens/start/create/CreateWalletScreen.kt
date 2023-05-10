@@ -13,10 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -30,15 +29,16 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import me.sulatskovalex.twallet.base.Screen
+import me.sulatskovalex.twallet.base.SafeAreaScreen
 import me.sulatskovalex.twallet.common.Res
+import me.sulatskovalex.twallet.providers.appColors
 
 @Composable
 fun CreateWalletScreen(
     onGoToHome: () -> Unit,
     onBackClick: () -> Unit,
-) {
-    Screen<CreateWalletViewModel> { viewModel ->
+) =
+    SafeAreaScreen<CreateWalletViewModel> { viewModel ->
         LaunchedEffect(viewModel) {
             viewModel.onLaunch()
         }
@@ -47,45 +47,57 @@ fun CreateWalletScreen(
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(Res.string.new_wallet)
+                        Text(
+                            text = Res.string.new_wallet,
+                            color = appColors.primaryText,
+                        )
                     },
                     modifier = Modifier.fillMaxWidth(),
                     navigationIcon = {
                         IconButton(onBackClick) {
                             Icon(
                                 painter = rememberVectorPainter(Icons.Default.ArrowBack),
-                                contentDescription = "Back"
+                                contentDescription = "Back",
+                                tint = appColors.primaryText,
                             )
                         }
                     },
+                    backgroundColor = appColors.surface,
                 )
-            }
+            },
+            backgroundColor = appColors.background,
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(all = 16.dp)
-                    .background(MaterialTheme.colors.background),
+                    .background(appColors.background),
             ) {
                 val state = viewModel.state.value
-                if (state.isLoading) {
-                    CircularProgressIndicator(Modifier.align(Alignment.Center))
-                } else if (state.isError) {
+                if (state.isError) {
                     Column {
                         Text(
                             text = "error",
                             modifier = Modifier.align(Alignment.CenterHorizontally),
+                            color = appColors.error,
                         )
                         Button(
                             onClick = { viewModel.onReloadClick(onGoToHome) },
                             modifier = Modifier.align(Alignment.CenterHorizontally),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = appColors.buttonBackground
+                            )
                         ) {
-                            Text("retry")
+                            Text(
+                                text = Res.string.retry,
+                                color = appColors.buttonText,
+                            )
                         }
                     }
                 } else if (state.words.isNotEmpty()) {
                     Column(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
                             .scrollable(rememberScrollState(), Orientation.Vertical),
                     ) {
                         (0 until 12).forEach { index ->
@@ -103,17 +115,24 @@ fun CreateWalletScreen(
                             )
                         }
                     }
-                    Button(
-                        onClick = { viewModel.onNextClick(onGoToHome) },
-                        modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter)
-                    ) {
-                        Text(Res.string.next)
+                    if (!state.isLoading) {
+                        Button(
+                            onClick = { viewModel.onNextClick(onGoToHome) },
+                            modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = appColors.buttonBackground,
+                            )
+                        ) {
+                            Text(
+                                text = Res.string.next,
+                                color = appColors.buttonText,
+                            )
+                        }
                     }
                 }
             }
         }
     }
-}
 
 @Composable
 fun DoubleWordItem(
@@ -145,5 +164,6 @@ fun WordItem(modifier: Modifier, index: Int, word: String) {
         text = "${index + 1}. $word",
         fontSize = 16.5.sp,
         fontWeight = FontWeight.SemiBold,
+        color = appColors.primaryText,
     )
 }
