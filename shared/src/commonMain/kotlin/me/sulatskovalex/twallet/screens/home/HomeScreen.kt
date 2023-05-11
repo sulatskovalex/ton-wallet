@@ -2,28 +2,43 @@ package me.sulatskovalex.twallet.screens.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SwipeableDefaults
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.skeptick.libres.compose.painterResource
+import kotlinx.coroutines.launch
+import me.sulatskovalex.twallet.AppScreens
+import me.sulatskovalex.twallet.base.BottomSheetHeader
 import me.sulatskovalex.twallet.base.SafeAreaScreen
 import me.sulatskovalex.twallet.common.Res
 import me.sulatskovalex.twallet.providers.appColors
@@ -40,16 +55,51 @@ import ru.alexgladkov.odyssey.core.LaunchFlag
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
-    onGotoSplash: () -> Unit,
+    controller: RootController = LocalRootController.current,
+    modalController: ModalController = controller.findModalController(),
 ) {
-    SafeAreaScreen<HomeViewModel>(
-        appColors.surface
-    ) {
+    SafeAreaScreen<HomeViewModel>(appColors.surface) { viewModel ->
+        val action = remember { mutableStateOf(HomeSheetDialogs.None) }
+        val sheetState =
+            rememberModalBottomSheetState(
+                ModalBottomSheetValue.Hidden,
+                SwipeableDefaults.AnimationSpec,
+                {
+                    if (it == ModalBottomSheetValue.Hidden) {
+                        action.value = HomeSheetDialogs.None
+                    }
+                    true
+                },
+                false
+            )
+        val scope = rememberCoroutineScope()
         ModalBottomSheetLayout(
             sheetContent = {
+                if (action.value != HomeSheetDialogs.None) {
+                    BottomSheetHeader {
+                        scope.launch {
+                            action.value = HomeSheetDialogs.None
+                            sheetState.hide()
+                        }
+                    }
+                }
+                when (action.value) {
+                    HomeSheetDialogs.Receive -> {
+                        Box(Modifier.fillMaxWidth().height(150.dp))
+                    }
 
+                    HomeSheetDialogs.Send -> {
+                        Box(Modifier.fillMaxWidth().height(150.dp))
+                    }
+
+                    HomeSheetDialogs.None -> {
+                    }
+                }
             },
             modifier = Modifier.fillMaxSize(),
+            sheetState = sheetState,
+            sheetBackgroundColor = appColors.surface,
+            sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
         ) {
             val selectedTab = remember { mutableStateOf(HomeTab.Home) }
             Scaffold(
@@ -112,7 +162,22 @@ fun HomeScreen(
                         .background(appColors.background),
                 ) {
                     when (selectedTab.value) {
-                        HomeTab.Home -> AssetsScreen()
+                        HomeTab.Home ->
+                            AssetsScreen(
+
+                                onSendClick = {
+                                    action.value = HomeSheetDialogs.Send
+                                    scope.launch {
+                                        sheetState.show()
+                                    }
+                                },
+                                onReceiveClick = {
+                                    action.value = HomeSheetDialogs.Receive
+                                    scope.launch {
+                                        sheetState.show()
+                                    }
+                                }
+                            )
 
                         HomeTab.Settings ->
                             SettingsScreen(
