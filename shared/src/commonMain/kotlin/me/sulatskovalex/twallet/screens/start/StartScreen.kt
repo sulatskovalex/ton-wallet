@@ -15,16 +15,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.github.skeptick.libres.compose.painterResource
+import me.sulatskovalex.twallet.AppScreens
 import me.sulatskovalex.twallet.base.Button
 import me.sulatskovalex.twallet.base.OutlinedButton
 import me.sulatskovalex.twallet.base.SafeAreaScreen
 import me.sulatskovalex.twallet.common.Res
 import me.sulatskovalex.twallet.providers.appColors
+import ru.alexgladkov.odyssey.compose.RootController
+import ru.alexgladkov.odyssey.compose.local.LocalRootController
 
 @Composable
 fun StartScreen(
-    onCreateWalletClick: () -> Unit,
-    onInputSeedClick: () -> Unit,
+    controller: RootController = LocalRootController.current
 ) =
     SafeAreaScreen<StartViewModel> { viewModel ->
         Box(
@@ -45,13 +47,13 @@ fun StartScreen(
                 OutlinedButton(
                     modifier = Modifier.fillMaxWidth(),
                     text = Res.string.create_wallet,
-                    onClick = onCreateWalletClick,
+                    onClick = { controller.launch(screen = AppScreens.CreateWallet.name) },
                 )
                 Spacer(Modifier.height(8.dp))
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     text = Res.string.input_seed,
-                    onClick = onInputSeedClick,
+                    onClick = { controller.launch(screen = AppScreens.InputSeed.name) },
                 )
                 Spacer(Modifier.height(16.dp))
             }

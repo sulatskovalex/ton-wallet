@@ -15,16 +15,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
+import me.sulatskovalex.twallet.AppScreens
 import me.sulatskovalex.twallet.base.Button
 import me.sulatskovalex.twallet.base.IconButton
 import me.sulatskovalex.twallet.base.SafeAreaScreen
 import me.sulatskovalex.twallet.common.Res
 import me.sulatskovalex.twallet.providers.appColors
+import ru.alexgladkov.odyssey.compose.RootController
+import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.core.LaunchFlag
 
 @Composable
 fun InputSeedScreen(
-    onGoToHome: () -> Unit,
-    onBackClick: () -> Unit,
+    controller: RootController = LocalRootController.current
 ) =
     SafeAreaScreen<InputSeedViewModel> { viewModel ->
         Scaffold(
@@ -41,7 +44,7 @@ fun InputSeedScreen(
                     navigationIcon = {
                         IconButton(
                             painter = rememberVectorPainter(Icons.Default.ArrowBack),
-                            onClick = onBackClick,
+                            onClick = controller::popBackStack,
                         )
                     },
                     backgroundColor = appColors.surface,
@@ -58,7 +61,12 @@ fun InputSeedScreen(
                 Button(
                     modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
                     text = Res.string.next,
-                    onClick = onGoToHome,
+                    onClick = {
+                        controller.launch(
+                            screen = AppScreens.Home.name,
+                            launchFlag = LaunchFlag.SingleNewTask,
+                        )
+                    },
                 )
             }
         }
