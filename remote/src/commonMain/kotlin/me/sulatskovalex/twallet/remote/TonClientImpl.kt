@@ -1,5 +1,7 @@
 package me.sulatskovalex.twallet.remote
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.sulatskovalex.twallet.domain.models.Wallet
 import me.sulatskovalex.twallet.domain.services.remote.NetworkSwitcher
 import me.sulatskovalex.twallet.domain.services.remote.TonClient
@@ -15,13 +17,16 @@ internal class TonClientImpl(
     private val networkSwitcher: NetworkSwitcher
 ) : TonClient {
 
-    override suspend fun randomWords(): List<String> = buildList {
-        val mnemonicWords = Mnemonic.mnemonicWords()
-        val random = Random.Default
-        (0 until 24).forEach {
-            add(mnemonicWords[random.nextInt(0, mnemonicWords.size)])
+    override suspend fun randomWords(): List<String> =
+        withContext(Dispatchers.Default) {
+            buildList {
+                val mnemonicWords = Mnemonic.mnemonicWords()
+                val random = Random.Default
+                (0 until 24).forEach {
+                    add(mnemonicWords[random.nextInt(0, mnemonicWords.size)])
+                }
+            }
         }
-    }
 
     override suspend fun generateWords(): List<String> =
         Mnemonic.generate()

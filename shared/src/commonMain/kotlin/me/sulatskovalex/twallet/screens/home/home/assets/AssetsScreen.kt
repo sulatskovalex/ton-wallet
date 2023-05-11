@@ -17,9 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import me.sulatskovalex.twallet.base.MiddleEllipsisText
 import me.sulatskovalex.twallet.base.OutlinedButton
 import me.sulatskovalex.twallet.base.SafeAreaScreen
 import me.sulatskovalex.twallet.providers.appColors
+import me.sulatskovalex.twallet.providers.displaySize
 
 @Composable
 fun AssetsScreen(
@@ -44,12 +46,20 @@ fun AssetsScreen(
                 fontSize = 32.sp,
             )
             Spacer(Modifier.height(16.dp))
-            Text(
-                modifier = Modifier.align(Alignment.Start),
+            MiddleEllipsisText(
+                modifier = Modifier.width(displaySize.widthDp.dp / 2)
+                    .align(Alignment.CenterHorizontally),
                 text = walletInfo.value.address,
                 color = appColors.primaryText,
+                fontSize = 16.sp,
             )
-            Row(Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)) {
+            Spacer(Modifier.height(16.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp)
+                    .align(Alignment.CenterHorizontally)
+            ) {
                 OutlinedButton(
                     modifier = Modifier.weight(1f),
                     text = "Receive",
