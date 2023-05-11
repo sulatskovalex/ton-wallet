@@ -27,10 +27,10 @@ class AlertButton(
 @Composable
 inline fun AlertDialog(
     titleText: String,
-    titleTextColor: Color,
     messageText: String,
-    messageTextColor: Color,
     positive: AlertButton,
+    titleTextColor: Color = appColors.primaryText,
+    messageTextColor: Color = appColors.secondaryText,
     negative: AlertButton? = null,
 ) =
     Column(

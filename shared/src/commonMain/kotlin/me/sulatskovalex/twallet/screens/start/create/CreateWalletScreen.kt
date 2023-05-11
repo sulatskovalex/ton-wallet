@@ -190,15 +190,13 @@ inline fun WordItem(modifier: Modifier, index: Int, word: String) =
 private fun ModalController.showConfirmDialog(onOkClick: () -> Unit) =
     present(AlertConfiguration(cornerRadius = 4)) { key ->
         AlertDialog(
-            Res.string.confirm_words_saved_title,
-            appColors.primaryText,
-            Res.string.confirm_words_saved_message,
-            appColors.secondaryText,
-            AlertButton(Res.string.ok, appColors.secondaryText) {
+            titleText = Res.string.confirm_words_saved_title,
+            messageText = Res.string.confirm_words_saved_message,
+            positive = AlertButton(Res.string.ok, appColors.secondaryText) {
                 popBackStack(key)
                 onOkClick.invoke()
             },
-            AlertButton(Res.string.cancel, appColors.secondaryText) {
+            negative = AlertButton(Res.string.cancel, appColors.secondaryText) {
                 popBackStack(key)
             }
         )

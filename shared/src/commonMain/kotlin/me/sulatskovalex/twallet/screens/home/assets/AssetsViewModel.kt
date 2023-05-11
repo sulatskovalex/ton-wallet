@@ -1,4 +1,4 @@
-package me.sulatskovalex.twallet.screens.home.home.assets
+package me.sulatskovalex.twallet.screens.home.assets
 
 import androidx.compose.runtime.mutableStateOf
 import com.adeo.kviewmodel.KViewModel

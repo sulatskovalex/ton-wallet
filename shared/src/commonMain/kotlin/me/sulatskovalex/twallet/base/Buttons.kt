@@ -95,12 +95,16 @@ inline fun LoadingButton(
 
 @Composable
 inline fun IconButton(
+    modifier: Modifier = Modifier,
     painter: Painter,
     contentDescription: String = "",
     tint: Color = appColors.primaryText,
     noinline onClick: () -> Unit
 ) =
-    androidx.compose.material.IconButton(onClick) {
+    androidx.compose.material.IconButton(
+        modifier = modifier,
+        onClick = onClick,
+    ) {
         Icon(
             painter = painter,
             contentDescription = contentDescription,

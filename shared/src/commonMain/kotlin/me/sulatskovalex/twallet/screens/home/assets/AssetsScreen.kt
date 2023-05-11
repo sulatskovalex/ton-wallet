@@ -1,4 +1,4 @@
-package me.sulatskovalex.twallet.screens.home.home.assets
+package me.sulatskovalex.twallet.screens.home.assets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -17,16 +17,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import me.sulatskovalex.twallet.base.MiddleEllipsisText
 import me.sulatskovalex.twallet.base.OutlinedButton
 import me.sulatskovalex.twallet.base.SafeAreaScreen
 import me.sulatskovalex.twallet.providers.appColors
-import me.sulatskovalex.twallet.providers.displaySize
 
 @Composable
 fun AssetsScreen(
     onSendClick: () -> Unit,
-    onReceiveClick: () -> Unit,
+    onReceiveClick: (String) -> Unit,
 ) =
     SafeAreaScreen<AssetsViewModel> { viewModel ->
         LaunchedEffect(viewModel) {
@@ -39,6 +37,7 @@ fun AssetsScreen(
                 .background(appColors.background)
                 .padding(16.dp),
         ) {
+            Spacer(Modifier.height(24.dp))
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = walletInfo.value.amount,
@@ -46,24 +45,23 @@ fun AssetsScreen(
                 fontSize = 32.sp,
             )
             Spacer(Modifier.height(16.dp))
-            MiddleEllipsisText(
-                modifier = Modifier.width(displaySize.widthDp.dp / 2)
-                    .align(Alignment.CenterHorizontally),
-                text = walletInfo.value.address,
+            Text(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = walletInfo.value.shortAddress,
                 color = appColors.primaryText,
                 fontSize = 16.sp,
             )
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(24.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp)
+                    .padding(start = 32.dp, end = 32.dp)
                     .align(Alignment.CenterHorizontally)
             ) {
                 OutlinedButton(
                     modifier = Modifier.weight(1f),
                     text = "Receive",
-                    onClick = onReceiveClick,
+                    onClick = { onReceiveClick.invoke(walletInfo.value.address) },
                 )
                 Spacer(Modifier.width(32.dp))
                 OutlinedButton(

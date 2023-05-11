@@ -1,49 +1,65 @@
 package me.sulatskovalex.twallet.screens.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
-import androidx.compose.material.SwipeableDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import io.github.skeptick.libres.compose.painterResource
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.selects.select
+import kotlinx.coroutines.withContext
 import me.sulatskovalex.twallet.AppScreens
 import me.sulatskovalex.twallet.base.AlertButton
 import me.sulatskovalex.twallet.base.AlertDialog
 import me.sulatskovalex.twallet.base.BottomSheetHeader
+import me.sulatskovalex.twallet.base.SafeAreaDialogScreen
 import me.sulatskovalex.twallet.base.SafeAreaScreen
+import me.sulatskovalex.twallet.base.generateQR
 import me.sulatskovalex.twallet.common.Res
 import me.sulatskovalex.twallet.providers.appColors
-import me.sulatskovalex.twallet.screens.home.home.assets.AssetsScreen
+import me.sulatskovalex.twallet.providers.displaySize
+import me.sulatskovalex.twallet.screens.home.assets.AssetsScreen
 import me.sulatskovalex.twallet.screens.home.settings.SettingsScreen
 import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.compose.controllers.ModalController
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.AlertConfiguration
+import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConfiguration
 import ru.alexgladkov.odyssey.core.LaunchFlag
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -53,143 +69,109 @@ fun HomeScreen(
     modalController: ModalController = controller.findModalController(),
 ) {
     SafeAreaScreen<HomeViewModel>(appColors.surface) { viewModel ->
-        val action = remember { mutableStateOf(HomeSheetDialogs.None) }
-        val sheetState =
-            rememberModalBottomSheetState(
-                ModalBottomSheetValue.Hidden,
-                SwipeableDefaults.AnimationSpec,
-                {
-                    if (it == ModalBottomSheetValue.Hidden) {
-                        action.value = HomeSheetDialogs.None
-                    }
-                    true
-                },
-                false
-            )
-        val scope = rememberCoroutineScope()
-        ModalBottomSheetLayout(
-            sheetContent = {
-                if (action.value != HomeSheetDialogs.None) {
-                    BottomSheetHeader {
-                        scope.launch {
-                            action.value = HomeSheetDialogs.None
-                            sheetState.hide()
-                        }
-                    }
-                }
-                when (action.value) {
-                    HomeSheetDialogs.Receive -> {
-                        Box(Modifier.fillMaxWidth().height(150.dp))
-                    }
-
-                    HomeSheetDialogs.Send -> {
-                        Box(Modifier.fillMaxWidth().height(150.dp))
-                    }
-
-                    HomeSheetDialogs.None -> {
-                    }
-                }
-            },
+        val selectedTab = remember { mutableStateOf(HomeTab.Home) }
+        Scaffold(
             modifier = Modifier.fillMaxSize(),
-            sheetState = sheetState,
-            sheetBackgroundColor = appColors.surface,
-            sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
-        ) {
-            val selectedTab = remember { mutableStateOf(HomeTab.Home) }
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-                scaffoldState = rememberScaffoldState(),
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                text = when (selectedTab.value) {
-                                    HomeTab.Home -> Res.string.menu_wallet
-                                    HomeTab.Settings -> Res.string.menu_settings
-                                },
-                                color = appColors.primaryText,
+            scaffoldState = rememberScaffoldState(),
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = when (selectedTab.value) {
+                                HomeTab.Home -> Res.string.menu_wallet
+                                HomeTab.Settings -> Res.string.menu_settings
+                            },
+                            color = appColors.primaryText,
+                        )
+                    },
+                    backgroundColor = appColors.surface,
+                )
+            },
+            bottomBar = {
+                BottomNavigation(
+                    modifier = Modifier.fillMaxWidth(),
+                    backgroundColor = appColors.surface,
+                ) {
+                    BottomNavigationItem(
+                        selected = selectedTab.value == HomeTab.Home,
+                        onClick = {
+                            selectedTab.value = HomeTab.Home
+                        },
+                        icon = {
+                            Icon(
+                                painter = painterResource(Res.image.ic_wallet),
+                                contentDescription = Res.string.menu_wallet,
                             )
                         },
-                        backgroundColor = appColors.surface,
+                        selectedContentColor = appColors.primary,
+                        unselectedContentColor = appColors.disabledText,
                     )
-                },
-                bottomBar = {
-                    BottomNavigation(
-                        modifier = Modifier.fillMaxWidth(),
-                        backgroundColor = appColors.surface,
-                    ) {
-                        BottomNavigationItem(
-                            selected = selectedTab.value == HomeTab.Home,
-                            onClick = {
-                                selectedTab.value = HomeTab.Home
-                            },
-                            icon = {
-                                Icon(
-                                    painter = painterResource(Res.image.ic_wallet),
-                                    contentDescription = Res.string.menu_wallet,
-                                )
-                            },
-                            selectedContentColor = appColors.primary,
-                            unselectedContentColor = appColors.disabledText,
-                        )
-                        BottomNavigationItem(
-                            selected = selectedTab.value == HomeTab.Settings,
-                            onClick = {
-                                selectedTab.value = HomeTab.Settings
-                            },
-                            icon = {
-                                Icon(
-                                    painter = rememberVectorPainter(Icons.Default.Settings),
-                                    contentDescription = Res.string.menu_settings,
-                                )
-                            },
-                            selectedContentColor = appColors.primary,
-                            unselectedContentColor = appColors.disabledText,
-                        )
-                    }
-                },
+                    BottomNavigationItem(
+                        selected = selectedTab.value == HomeTab.Settings,
+                        onClick = {
+                            selectedTab.value = HomeTab.Settings
+                        },
+                        icon = {
+                            Icon(
+                                painter = rememberVectorPainter(Icons.Default.Settings),
+                                contentDescription = Res.string.menu_settings,
+                            )
+                        },
+                        selectedContentColor = appColors.primary,
+                        unselectedContentColor = appColors.disabledText,
+                    )
+                }
+            },
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+                    .background(appColors.background),
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(it)
-                        .background(appColors.background),
-                ) {
-                    when (selectedTab.value) {
-                        HomeTab.Home ->
-                            AssetsScreen(
-
-                                onSendClick = {
-                                    action.value = HomeSheetDialogs.Send
-                                    scope.launch {
-                                        sheetState.show()
-                                    }
-                                },
-                                onReceiveClick = {
-                                    action.value = HomeSheetDialogs.Receive
-                                    scope.launch {
-                                        sheetState.show()
+                when (selectedTab.value) {
+                    HomeTab.Home ->
+                        AssetsScreen(
+                            onSendClick = {
+                                modalController.present(
+                                    ModalSheetConfiguration()
+                                ) { key ->
+                                    SafeAreaDialogScreen {
+                                        Column {
+                                            BottomSheetHeader { modalController.popBackStack(key) }
+                                            AlertDialog(
+                                                "qwqwqewqeqeq",
+                                                "qwqwqewqeqeqqwqwqewqeqeqqwqwqewqeqeqqwqwqewqeqeq",
+                                                AlertButton(
+                                                    "qwqwqe",
+                                                    appColors.secondaryText
+                                                ) { modalController.popBackStack(key) }
+                                            )
+                                        }
                                     }
                                 }
-                            )
+                            },
+                            onReceiveClick = { addressFriendly ->
+                                modalController.showReceiveDialog(addressFriendly)
+                            }
+                        )
 
-                        HomeTab.Settings ->
-                            SettingsScreen(
-                                onExitClick = {
-                                    modalController.showDisconnectWalletDialog(
-                                        onDisconnectOkClick = { key ->
-                                            viewModel.onExitClick {
-                                                modalController.popBackStack(key)
-                                                controller.launch(
-                                                    screen = AppScreens.Splash.name,
-                                                    launchFlag = LaunchFlag.SingleNewTask,
-                                                )
-                                            }
-                                        },
-                                    )
-                                }
-                            )
-                    }
+                    HomeTab.Settings ->
+                        SettingsScreen(
+                            onExitClick = {
+                                modalController.showDisconnectWalletDialog(
+                                    onDisconnectOkClick = { key ->
+                                        viewModel.onExitClick {
+                                            modalController.popBackStack(key)
+                                            controller.launch(
+                                                screen = AppScreens.Splash.name,
+                                                launchFlag = LaunchFlag.SingleNewTask,
+                                            )
+                                        }
+                                    },
+                                )
+                            }
+                        )
                 }
             }
         }
@@ -200,17 +182,90 @@ private inline fun ModalController.showDisconnectWalletDialog(
     noinline onDisconnectOkClick: (dialogKey: String) -> Unit,
 ) = present(AlertConfiguration(cornerRadius = 4)) { key ->
     AlertDialog(
-        Res.string.disconnect,
-        appColors.error,
-        Res.string.disconnect_alert_message,
-        appColors.secondaryText,
-        AlertButton(Res.string.disconnect, appColors.error) {
+        titleText = Res.string.disconnect,
+        titleTextColor = appColors.error,
+        messageText = Res.string.disconnect_alert_message,
+        messageTextColor = appColors.secondaryText,
+        positive = AlertButton(Res.string.disconnect, appColors.error) {
             popBackStack(key)
             onDisconnectOkClick.invoke(key)
         },
-        AlertButton(Res.string.cancel, appColors.secondaryText) {
+        negative = AlertButton(Res.string.cancel, appColors.secondaryText) {
             popBackStack(key)
         },
     )
+}
+
+private inline fun ModalController.showReceiveDialog(addressFriendly: String) =
+    present(
+        ModalSheetConfiguration(cornerRadius = 8)
+    ) { key ->
+        SafeAreaDialogScreen {
+            Column {
+                BottomSheetHeader { popBackStack(key) }
+                val width = (displaySize.widthDp / 1.5).dp
+                Column(
+                    modifier = Modifier
+                        .width(width)
+                        .align(Alignment.CenterHorizontally)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(appColors.background, RoundedCornerShape(16.dp))
+                            .padding(all = 16.dp),
+                    ) {
+                        Image(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .size(width - 32.dp),
+                            painter = rememberQrBitmapPainter(
+                                content = addressFriendly,
+                                150.dp
+                            ),
+                            contentDescription = "qr",
+                        )
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = addressFriendly,
+                            color = appColors.primaryText,
+                            fontSize = 16.sp,
+                        )
+                    }
+                    Spacer(Modifier.height(16.dp))
+                }
+            }
+        }
+    }
+
+@Composable
+fun rememberQrBitmapPainter(
+    content: String,
+    sideSize: Dp
+): BitmapPainter {
+    val density = LocalDensity.current
+
+    val sizePx = with(density) { sideSize.roundToPx() }
+
+
+    val bitmap = remember(content) {
+        mutableStateOf<ImageBitmap?>(null)
+    }
+
+    LaunchedEffect(bitmap) {
+        if (content.isEmpty() || bitmap.value != null) return@LaunchedEffect
+        bitmap.value = withContext(Dispatchers.Default) { generateQR(content, sizePx) }
+    }
+
+    return remember(bitmap.value) {
+        val value = bitmap.value ?: ImageBitmap(sizePx, sizePx)
+        BitmapPainter(
+            value,
+            IntOffset.Zero,
+            IntSize(value.width, value.height),
+            FilterQuality.High
+        )
+    }
 }
 

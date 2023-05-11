@@ -41,6 +41,25 @@ inline fun <reified T : KViewModel> SafeAreaScreen(
 }
 
 @Composable
+inline fun SafeAreaDialogScreen(
+    backgroundColor: Color = appColors.surface,
+    safeAreaColor: Color = appColors.background,
+    noinline content: @Composable () -> Unit,
+) {
+    Column(Modifier.fillMaxWidth().background(backgroundColor)) {
+        Box(Modifier.fillMaxWidth()) {
+            content.invoke()
+        }
+        when {
+            platform.android ->
+                Box(Modifier.fillMaxWidth().height(48.dp).background(safeAreaColor))
+            platform.iOS ->
+                Box(Modifier.fillMaxWidth().height(34.dp).background(safeAreaColor))
+        }
+    }
+}
+
+@Composable
 inline fun <reified T : KViewModel> Screen(
     noinline content: @Composable (T) -> Unit
 ) =

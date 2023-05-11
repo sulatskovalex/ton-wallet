@@ -6,7 +6,7 @@ import me.sulatskovalex.twallet.domain.repositories.WalletRepository
 import me.sulatskovalex.twallet.remote.di.remoteModule
 import me.sulatskovalex.twallet.screens.SplashViewModel
 import me.sulatskovalex.twallet.screens.home.HomeViewModel
-import me.sulatskovalex.twallet.screens.home.home.assets.AssetsViewModel
+import me.sulatskovalex.twallet.screens.home.assets.AssetsViewModel
 import me.sulatskovalex.twallet.screens.home.settings.SettingsViewModel
 import me.sulatskovalex.twallet.screens.start.StartViewModel
 import me.sulatskovalex.twallet.screens.start.create.CreateWalletViewModel

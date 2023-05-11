@@ -56,6 +56,8 @@ kotlin {
                 api(libs.activitycompose)
                 api(libs.appcompat)
                 api(libs.corektx)
+
+                implementation(libs.zxing)
             }
         }
         val iosX64Main by getting
