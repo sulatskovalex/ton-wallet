@@ -1,31 +1,43 @@
 package me.sulatskovalex.twallet.screens.start.create
 
 data class State(
-    val isLoading: Boolean = false,
+    val isLoadingWords: Boolean = false,
+    val isLoadingWallet: Boolean = false,
     val isError: Boolean = false,
+    val randomWords: List<String> = emptyList(),
     val words: List<String> = emptyList(),
 ) {
-    fun loading(): State =
+    fun loadingWords(): State =
         copy(
-            isLoading = true,
+            isLoadingWords = true,
+            isLoadingWallet = false,
+            isError = false,
+        )
+
+    fun loadingWallet(): State =
+        copy(
+            isLoadingWords = false,
+            isLoadingWallet = true,
             isError = false,
         )
 
     fun words(words: List<String>): State =
         copy(
-            isLoading = false,
+            isLoadingWords = false,
+            isLoadingWallet = false,
             isError = false,
             words = words,
         )
 
     fun randomWords(words: List<String>): State =
         copy(
-            words = words,
+            randomWords = words,
         )
 
     fun error(): State =
         copy(
-            isLoading = false,
+            isLoadingWords = false,
+            isLoadingWallet = false,
             isError = true,
         )
 }

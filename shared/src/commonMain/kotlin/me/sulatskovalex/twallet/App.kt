@@ -67,18 +67,7 @@ fun App(
                 )
             }
             screen(AppScreens.CreateWallet.name) {
-                val controller = LocalRootController.current
-                CreateWalletScreen(
-                    onGoToHome = {
-                        controller.launch(
-                            screen = AppScreens.Home.name,
-                            launchFlag = LaunchFlag.SingleNewTask,
-                        )
-                    },
-                    onBackClick = {
-                        controller.popBackStack()
-                    },
-                )
+                CreateWalletScreen()
             }
             screen(AppScreens.InputSeed.name) {
                 val controller = LocalRootController.current

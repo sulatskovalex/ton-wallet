@@ -12,10 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -30,15 +26,27 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import me.sulatskovalex.twallet.AppScreens
+import me.sulatskovalex.twallet.base.AlertButton
+import me.sulatskovalex.twallet.base.AlertDialog
+import me.sulatskovalex.twallet.base.Button
+import me.sulatskovalex.twallet.base.IconButton
+import me.sulatskovalex.twallet.base.LoadingButton
 import me.sulatskovalex.twallet.base.SafeAreaScreen
 import me.sulatskovalex.twallet.common.Res
 import me.sulatskovalex.twallet.providers.appColors
+import ru.alexgladkov.odyssey.compose.RootController
+import ru.alexgladkov.odyssey.compose.controllers.ModalController
+import ru.alexgladkov.odyssey.compose.extensions.present
+import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.AlertConfiguration
+import ru.alexgladkov.odyssey.core.LaunchFlag
 import kotlin.random.Random
 
 @Composable
 fun CreateWalletScreen(
-    onGoToHome: () -> Unit,
-    onBackClick: () -> Unit,
+    controller: RootController = LocalRootController.current,
+    modalController: ModalController = controller.findModalController(),
 ) =
     SafeAreaScreen<CreateWalletViewModel> { viewModel ->
         LaunchedEffect(viewModel) {
@@ -56,13 +64,11 @@ fun CreateWalletScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     navigationIcon = {
-                        IconButton(onBackClick) {
-                            Icon(
-                                painter = rememberVectorPainter(Icons.Default.ArrowBack),
-                                contentDescription = "Back",
-                                tint = appColors.primaryText,
-                            )
-                        }
+                        IconButton(
+                            painter = rememberVectorPainter(Icons.Default.ArrowBack),
+                            contentDescription = Res.string.back,
+                            onClick = controller::popBackStack
+                        )
                     },
                     backgroundColor = appColors.surface,
                 )
@@ -76,27 +82,12 @@ fun CreateWalletScreen(
                     .background(appColors.background),
             ) {
                 val state = viewModel.state.value
-                if (state.isError) {
-                    Column {
-                        Text(
-                            text = "error",
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            color = appColors.error,
-                        )
-                        Button(
-                            onClick = { viewModel.onReloadClick(onGoToHome) },
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = appColors.buttonBackground
-                            )
-                        ) {
-                            Text(
-                                text = Res.string.retry,
-                                color = appColors.buttonText,
-                            )
-                        }
-                    }
-                } else if (state.words.isNotEmpty()) {
+
+                val words = if (state.isLoadingWords)
+                    state.randomWords
+                else
+                    state.words
+                if (words.isNotEmpty()) {
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -110,31 +101,54 @@ fun CreateWalletScreen(
                                     bottom = 4.dp,
                                     end = 24.dp
                                 ).alpha(
-                                    if (state.isLoading)
-                                        Random.Default.nextInt(from = 0, until = 100) / 100f
+                                    if (state.isLoadingWords)
+                                        Random.Default.nextInt(from = 10, until = 100) / 100f
                                     else
                                         1f
                                 ),
                                 firstIndex = index,
-                                firstWord = state.words[index],
+                                firstWord = words[index],
                                 secondIndex = index + 12,
-                                secondWord = state.words[index + 12],
+                                secondWord = words[index + 12],
                             )
                         }
                     }
-                    if (!state.isLoading) {
+                    LoadingButton(
+                        modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
+                        text = Res.string.next,
+                        isLoading = state.isLoadingWords || state.isLoadingWallet,
+                        onClick = {
+                            modalController.showConfirmDialog {
+                                viewModel.onConfirmOkClick {
+                                    controller.launch(
+                                        screen = AppScreens.Home.name,
+                                        launchFlag = LaunchFlag.SingleNewTask,
+                                    )
+                                }
+                            }
+                        },
+                    )
+                }
+
+                if (state.isError) {
+                    Column {
+                        Text(
+                            text = "error",
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            color = appColors.error,
+                        )
                         Button(
-                            onClick = { viewModel.onNextClick(onGoToHome) },
-                            modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = appColors.buttonBackground,
-                            )
-                        ) {
-                            Text(
-                                text = Res.string.next,
-                                color = appColors.buttonText,
-                            )
-                        }
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            text = Res.string.retry,
+                            onClick = {
+                                viewModel.onReloadClick {
+                                    controller.launch(
+                                        screen = AppScreens.Home.name,
+                                        launchFlag = LaunchFlag.SingleNewTask,
+                                    )
+                                }
+                            },
+                        )
                     }
                 }
             }
@@ -142,13 +156,13 @@ fun CreateWalletScreen(
     }
 
 @Composable
-fun DoubleWordItem(
+inline fun DoubleWordItem(
     modifier: Modifier,
     firstIndex: Int,
     firstWord: String,
     secondIndex: Int,
     secondWord: String
-) {
+) =
     Row(modifier = modifier) {
         WordItem(
             modifier = Modifier.weight(1f),
@@ -162,10 +176,9 @@ fun DoubleWordItem(
             word = secondWord,
         )
     }
-}
 
 @Composable
-fun WordItem(modifier: Modifier, index: Int, word: String) {
+inline fun WordItem(modifier: Modifier, index: Int, word: String) =
     Text(
         modifier = modifier,
         text = "${index + 1}. $word",
@@ -173,4 +186,20 @@ fun WordItem(modifier: Modifier, index: Int, word: String) {
         fontWeight = FontWeight.SemiBold,
         color = appColors.primaryText,
     )
-}
+
+private fun ModalController.showConfirmDialog(onOkClick: () -> Unit) =
+    present(AlertConfiguration(cornerRadius = 4)) { key ->
+        AlertDialog(
+            Res.string.confirm_words_saved_title,
+            appColors.primaryText,
+            Res.string.confirm_words_saved_message,
+            appColors.secondaryText,
+            AlertButton(Res.string.ok, appColors.secondaryText) {
+                popBackStack(key)
+                onOkClick.invoke()
+            },
+            AlertButton(Res.string.cancel, appColors.secondaryText) {
+                popBackStack(key)
+            }
+        )
+    }

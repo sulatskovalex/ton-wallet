@@ -13,4 +13,8 @@
     <string name="disconnect">Disconnect</string>
     <string name="disconnect_alert_message">Disconnect wallet from application?</string>
     <string name="cancel">Cancel</string>
+    <string name="back">Back</string>
+    <string name="confirm_words_saved_title">Attention</string>
+    <string name="confirm_words_saved_message">Are you sure?</string>
+    <string name="ok">Ok</string>
 </resources>

@@ -5,10 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -19,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
+import me.sulatskovalex.twallet.base.Button
+import me.sulatskovalex.twallet.base.IconButton
 import me.sulatskovalex.twallet.base.SafeAreaScreen
 import me.sulatskovalex.twallet.common.Res
 import me.sulatskovalex.twallet.providers.appColors
@@ -41,13 +39,10 @@ fun InputSeedScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     navigationIcon = {
-                        IconButton(onBackClick) {
-                            Icon(
-                                painter = rememberVectorPainter(Icons.Default.ArrowBack),
-                                contentDescription = "",
-                                tint = appColors.primaryText,
-                            )
-                        }
+                        IconButton(
+                            painter = rememberVectorPainter(Icons.Default.ArrowBack),
+                            onClick = onBackClick,
+                        )
                     },
                     backgroundColor = appColors.surface,
                 )
@@ -61,17 +56,10 @@ fun InputSeedScreen(
                     .background(appColors.background),
             ) {
                 Button(
-                    onClick = onGoToHome,
                     modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = appColors.buttonBackground,
-                    )
-                ) {
-                    Text(
-                        text = Res.string.next,
-                        color = appColors.buttonText
-                    )
-                }
+                    text = Res.string.next,
+                    onClick = onGoToHome,
+                )
             }
         }
     }

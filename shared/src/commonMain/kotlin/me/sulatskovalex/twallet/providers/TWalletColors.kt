@@ -20,7 +20,7 @@ data class TWalletColors(
     val buttonText: Color = Color.White,
     val buttonOutlineText: Color = primaryText,
     val buttonBackground: Color = primary,
-    val buttonOutlineBackground: Color = surface,
+    val buttonOutlineBackground: Color = Color.Transparent,
     val link: Color = Color(0xFF0055ff),
 )
 

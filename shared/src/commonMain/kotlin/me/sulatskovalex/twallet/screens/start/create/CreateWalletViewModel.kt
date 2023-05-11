@@ -21,11 +21,10 @@ class CreateWalletViewModel(
             }
         }
         viewModelScope.launch {
-            state.update { it.loading() }
+            state.update { it.loadingWords() }
             try {
                 val words = walletRepository.generateWords()
                 randomWordsJob.cancel()
-                state.update { it.randomWords(words) }
                 delay(350)
                 state.update { it.words(words) }
             } catch (t: Throwable) {
@@ -39,14 +38,15 @@ class CreateWalletViewModel(
         if (state.value.words.isEmpty()) {
             onLaunch()
         } else {
-            onNextClick(onGoToHome)
+            onConfirmOkClick(onGoToHome)
         }
     }
 
-    fun onNextClick(onGoToHome: () -> Unit) {
+
+    fun onConfirmOkClick(onGoToHome: () -> Unit) {
         viewModelScope.launch {
             try {
-                state.update { it.loading() }
+                state.update { it.loadingWallet() }
                 walletRepository.createWallet(state.value.words)
                 onGoToHome.invoke()
             } catch (t: Throwable) {

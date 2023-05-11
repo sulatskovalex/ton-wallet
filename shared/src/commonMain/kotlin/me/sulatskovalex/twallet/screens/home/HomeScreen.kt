@@ -2,14 +2,10 @@ package me.sulatskovalex.twallet.screens.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -20,7 +16,6 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SwipeableDefaults
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
@@ -30,19 +25,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import io.github.skeptick.libres.compose.painterResource
 import kotlinx.coroutines.launch
 import me.sulatskovalex.twallet.AppScreens
+import me.sulatskovalex.twallet.base.AlertButton
+import me.sulatskovalex.twallet.base.AlertDialog
 import me.sulatskovalex.twallet.base.BottomSheetHeader
 import me.sulatskovalex.twallet.base.SafeAreaScreen
 import me.sulatskovalex.twallet.common.Res
 import me.sulatskovalex.twallet.providers.appColors
-import me.sulatskovalex.twallet.providers.displaySize
 import me.sulatskovalex.twallet.screens.home.home.assets.AssetsScreen
 import me.sulatskovalex.twallet.screens.home.settings.SettingsScreen
 import ru.alexgladkov.odyssey.compose.RootController
@@ -182,7 +176,7 @@ fun HomeScreen(
                         HomeTab.Settings ->
                             SettingsScreen(
                                 onExitClick = {
-                                    modalController.showDisconnectWallet(
+                                    modalController.showDisconnectWalletDialog(
                                         onDisconnectOkClick = { key ->
                                             viewModel.onExitClick {
                                                 modalController.popBackStack(key)
@@ -202,46 +196,21 @@ fun HomeScreen(
     }
 }
 
-inline fun ModalController.showDisconnectWallet(
+private inline fun ModalController.showDisconnectWalletDialog(
     noinline onDisconnectOkClick: (dialogKey: String) -> Unit,
 ) = present(AlertConfiguration(cornerRadius = 4)) { key ->
-    Column(
-        Modifier
-            .width((displaySize.widthDp.toFloat() / 1.3).dp)
-            .background(appColors.surface)
-            .padding(16.dp),
-    ) {
-        Text(
-            text = Res.string.disconnect,
-            fontSize = 18.sp,
-            color = appColors.error
-        )
-        Spacer(Modifier.height(16.dp))
-        Text(
-            text = Res.string.disconnect_alert_message,
-            fontSize = 16.sp,
-            color = appColors.secondaryText
-        )
-        Spacer(Modifier.height(16.dp))
-        Row(
-            Modifier.align(Alignment.End),
-        ) {
-            TextButton({
-                popBackStack(key)
-            }) {
-                Text(text = Res.string.cancel, fontSize = 16.sp, color = appColors.secondaryText)
-            }
-            Spacer(Modifier.width(16.dp))
-            TextButton({
-                onDisconnectOkClick(key)
-            }) {
-                Text(
-                    text = Res.string.disconnect,
-                    fontSize = 16.sp,
-                    color = appColors.error
-                )
-            }
-        }
-    }
+    AlertDialog(
+        Res.string.disconnect,
+        appColors.error,
+        Res.string.disconnect_alert_message,
+        appColors.secondaryText,
+        AlertButton(Res.string.disconnect, appColors.error) {
+            popBackStack(key)
+            onDisconnectOkClick.invoke(key)
+        },
+        AlertButton(Res.string.cancel, appColors.secondaryText) {
+            popBackStack(key)
+        },
+    )
 }
 
