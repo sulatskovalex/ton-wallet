@@ -1,6 +1,6 @@
 package me.sulatskovalex.twallet.screens.home.settings
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
@@ -12,38 +12,45 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import me.sulatskovalex.twallet.base.SafeAreaScreen
+import me.sulatskovalex.twallet.base.rippleClickable
+import me.sulatskovalex.twallet.common.Res
 import me.sulatskovalex.twallet.providers.appColors
 
 @Composable
 fun SettingsScreen(
-    onGotoSplash: () -> Unit,
+    onExitClick: () -> Unit,
 ) =
     SafeAreaScreen<SettingsViewModel> { viewModel ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .scrollable(rememberScrollState(), Orientation.Vertical),
+                .scrollable(rememberScrollState(), Orientation.Vertical)
+                .background(appColors.background),
         ) {
             Text(
                 text = "assets",
                 color = appColors.primaryText,
                 modifier = Modifier.fillMaxWidth()
-                    .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 8.dp)
+                    .padding(16.dp),
+                fontSize = 16.sp,
             )
             Text(
                 text = "assets",
                 color = appColors.primaryText,
                 modifier = Modifier.fillMaxWidth()
-                    .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 8.dp)
+                    .padding(16.dp),
+                fontSize = 16.sp,
             )
             Text(
-                text = "Exit",
+                text = Res.string.disconnect_wallet,
                 color = appColors.primaryText,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable(onClick = { viewModel.onExitClick(onGotoSplash) })
-                    .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 8.dp)
+                    .rippleClickable(onClick = onExitClick)
+                    .padding(16.dp),
+                fontSize = 16.sp,
             )
         }
     }

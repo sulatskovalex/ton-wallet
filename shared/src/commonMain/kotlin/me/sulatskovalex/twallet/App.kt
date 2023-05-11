@@ -23,7 +23,7 @@ import ru.alexgladkov.odyssey.core.LaunchFlag
 
 @Composable
 fun App(
-    configuration: OdysseyConfiguration,
+    configuration: @Composable () -> OdysseyConfiguration,
     displaySize: DisplaySize,
     platform: Platform,
     onFinish: () -> Unit
@@ -34,7 +34,7 @@ fun App(
         LocalColors provides if (isSystemInDarkTheme()) darkPalette else lightPalette
     ) {
         setNavigationContent(
-            configuration = configuration,
+            configuration = configuration.invoke(),
             onApplicationFinish = onFinish,
         ) {
             screen(AppScreens.Splash.name) {
@@ -95,13 +95,7 @@ fun App(
                 )
             }
             screen(AppScreens.Home.name) {
-                val controller = LocalRootController.current
-                HomeScreen(onGotoSplash = {
-                    controller.launch(
-                        screen = AppScreens.Splash.name,
-                        launchFlag = LaunchFlag.SingleNewTask,
-                    )
-                })
+                HomeScreen()
             }
         }
     }

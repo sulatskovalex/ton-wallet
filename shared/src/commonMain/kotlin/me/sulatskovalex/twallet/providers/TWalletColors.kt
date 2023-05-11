@@ -11,12 +11,12 @@ val appColors: TWalletColors
 data class TWalletColors(
     val background: Color,
     val surface: Color,
-    val primary: Color,
-    val secondary: Color,
+    val primary: Color = Color(0xFF0088CC),
+    val secondary: Color = Color(0xFFFDD835),
     val primaryText: Color,
     val secondaryText: Color,
     val disabledText: Color,
-    val error: Color,
+    val error: Color = Color(0xFFFF5252),
     val buttonText: Color = Color.White,
     val buttonOutlineText: Color = primaryText,
     val buttonBackground: Color = primary,
@@ -30,21 +30,15 @@ val LocalColors = staticCompositionLocalOf<TWalletColors> {
 val darkPalette = TWalletColors(
     background = Color(0xFF121212),
     surface = Color(0xFF222222),
-    primary = Color(0xFF00796B),
-    secondary = Color(0xFF23282D),
     primaryText = Color(0xDEFFFFFF),
     secondaryText = Color(0x99FFFFFF),
     disabledText = Color(0x61FFFFFF),
-    error = Color(0xFFFF5252)
 )
 
 val lightPalette = TWalletColors(
-    background = Color(0xFFFAFAFA),
+    background = Color(0xFFF0F0F0),
     surface = Color(0xFFFFFFFF),
-    primary = Color(0xFF009688),
-    secondary = Color(0xFF23282D),
     primaryText = Color(0xDE000000),
     secondaryText = Color(0x99000000),
     disabledText = Color(0x61000000),
-    error = Color(0xFFFF5252)
 )

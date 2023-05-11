@@ -44,7 +44,8 @@ fun InputSeedScreen(
                         IconButton(onBackClick) {
                             Icon(
                                 painter = rememberVectorPainter(Icons.Default.ArrowBack),
-                                contentDescription = ""
+                                contentDescription = "",
+                                tint = appColors.primaryText,
                             )
                         }
                     },

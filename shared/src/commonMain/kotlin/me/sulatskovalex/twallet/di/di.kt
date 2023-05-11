@@ -35,9 +35,9 @@ object TWalletDI {
                     factory { StartViewModel() }
                     factory { InputSeedViewModel(get()) }
                     factory { CreateWalletViewModel(get()) }
-                    factory { HomeViewModel() }
+                    factory { HomeViewModel(get()) }
                     factory { AssetsViewModel(get()) }
-                    factory { SettingsViewModel(get()) }
+                    factory { SettingsViewModel() }
                 },
             )
         }

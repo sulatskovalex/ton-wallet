@@ -8,4 +8,8 @@
     <string name="next">Продолжить</string>
     <string name="menu_wallet">Кошелёк</string>
     <string name="menu_settings">Настройки</string>
+    <string name="disconnect_wallet">Отключить кошелёк</string>
+    <string name="disconnect">Отключить</string>
+    <string name="disconnect_alert_message">Отключить кошелёк от приложения?</string>
+    <string name="cancel">Отмена</string>
 </resources>

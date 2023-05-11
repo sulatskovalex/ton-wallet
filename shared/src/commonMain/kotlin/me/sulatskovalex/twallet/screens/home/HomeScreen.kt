@@ -21,12 +21,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import io.github.skeptick.libres.compose.painterResource
 import me.sulatskovalex.twallet.base.SafeAreaScreen
 import me.sulatskovalex.twallet.common.Res
+import me.sulatskovalex.twallet.providers.appColors
+import me.sulatskovalex.twallet.providers.displaySize
 import me.sulatskovalex.twallet.screens.home.home.assets.AssetsScreen
 import me.sulatskovalex.twallet.screens.home.settings.SettingsScreen
-import me.sulatskovalex.twallet.providers.appColors
+import ru.alexgladkov.odyssey.compose.RootController
+import ru.alexgladkov.odyssey.compose.controllers.ModalController
+import ru.alexgladkov.odyssey.compose.extensions.present
+import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.AlertConfiguration
+import ru.alexgladkov.odyssey.core.LaunchFlag
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -48,7 +57,7 @@ fun HomeScreen(
                 scaffoldState = rememberScaffoldState(),
                 topBar = {
                     TopAppBar(
-                        {
+                        title = {
                             Text(
                                 text = when (selectedTab.value) {
                                     HomeTab.Home -> Res.string.menu_wallet
@@ -76,6 +85,8 @@ fun HomeScreen(
                                     contentDescription = Res.string.menu_wallet,
                                 )
                             },
+                            selectedContentColor = appColors.primary,
+                            unselectedContentColor = appColors.disabledText,
                         )
                         BottomNavigationItem(
                             selected = selectedTab.value == HomeTab.Settings,
@@ -88,6 +99,8 @@ fun HomeScreen(
                                     contentDescription = Res.string.menu_settings,
                                 )
                             },
+                            selectedContentColor = appColors.primary,
+                            unselectedContentColor = appColors.disabledText,
                         )
                     }
                 },
@@ -100,10 +113,70 @@ fun HomeScreen(
                 ) {
                     when (selectedTab.value) {
                         HomeTab.Home -> AssetsScreen()
-                        HomeTab.Settings -> SettingsScreen(onGotoSplash)
+
+                        HomeTab.Settings ->
+                            SettingsScreen(
+                                onExitClick = {
+                                    modalController.showDisconnectWallet(
+                                        onDisconnectOkClick = { key ->
+                                            viewModel.onExitClick {
+                                                modalController.popBackStack(key)
+                                                controller.launch(
+                                                    screen = AppScreens.Splash.name,
+                                                    launchFlag = LaunchFlag.SingleNewTask,
+                                                )
+                                            }
+                                        },
+                                    )
+                                }
+                            )
                     }
                 }
             }
         }
     }
 }
+
+inline fun ModalController.showDisconnectWallet(
+    noinline onDisconnectOkClick: (dialogKey: String) -> Unit,
+) = present(AlertConfiguration(cornerRadius = 4)) { key ->
+    Column(
+        Modifier
+            .width((displaySize.widthDp.toFloat() / 1.3).dp)
+            .background(appColors.surface)
+            .padding(16.dp),
+    ) {
+        Text(
+            text = Res.string.disconnect,
+            fontSize = 18.sp,
+            color = appColors.error
+        )
+        Spacer(Modifier.height(16.dp))
+        Text(
+            text = Res.string.disconnect_alert_message,
+            fontSize = 16.sp,
+            color = appColors.secondaryText
+        )
+        Spacer(Modifier.height(16.dp))
+        Row(
+            Modifier.align(Alignment.End),
+        ) {
+            TextButton({
+                popBackStack(key)
+            }) {
+                Text(text = Res.string.cancel, fontSize = 16.sp, color = appColors.secondaryText)
+            }
+            Spacer(Modifier.width(16.dp))
+            TextButton({
+                onDisconnectOkClick(key)
+            }) {
+                Text(
+                    text = Res.string.disconnect,
+                    fontSize = 16.sp,
+                    color = appColors.error
+                )
+            }
+        }
+    }
+}
+

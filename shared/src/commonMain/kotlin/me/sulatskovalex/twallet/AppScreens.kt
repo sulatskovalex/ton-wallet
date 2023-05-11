@@ -6,4 +6,7 @@ enum class AppScreens {
     CreateWallet,
     InputSeed,
     Home,
+    Assets,
+    Settings,
+    ;
 }
