@@ -41,4 +41,8 @@ class WalletRepository(
     suspend fun deleteCurrentWallet() {
         walletDatabase.deleteCurrentWallet()
     }
+
+    fun validateAddress(scanned: String): String? =
+        tonClient.validateAddress(scanned)
+
 }

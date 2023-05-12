@@ -6,4 +6,5 @@ interface TonClient {
     suspend fun randomWords(): List<String>
     suspend fun generateWords(): List<String>
     suspend fun createWallet(words: List<String>): Wallet
+    fun validateAddress(scanned: String): String?
 }

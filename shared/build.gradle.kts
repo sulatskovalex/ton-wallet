@@ -57,6 +57,9 @@ kotlin {
                 api(libs.appcompat)
                 api(libs.corektx)
 
+                implementation(libs.camera2)
+                implementation(libs.camera.lifecycle)
+                implementation(libs.camera.view)
                 implementation(libs.zxing)
             }
         }

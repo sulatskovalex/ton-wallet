@@ -42,14 +42,14 @@ fun AssetsScreen(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = walletInfo.value.amount,
                 color = appColors.primaryText,
-                fontSize = 32.sp,
+                fontSize = 36.sp,
             )
             Spacer(Modifier.height(16.dp))
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = walletInfo.value.shortAddress,
                 color = appColors.primaryText,
-                fontSize = 16.sp,
+                fontSize = 18.sp,
             )
             Spacer(Modifier.height(24.dp))
             Row(

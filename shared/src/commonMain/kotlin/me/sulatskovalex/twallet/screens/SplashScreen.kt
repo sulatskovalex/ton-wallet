@@ -44,8 +44,8 @@ fun SplashScreen(
                     )
                 })
             size.animateTo(
-                120f,
-                tween(
+                targetValue = 120f,
+                animationSpec = tween(
                     durationMillis = 450,
                     easing = LinearEasing
                 ),

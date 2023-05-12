@@ -52,4 +52,11 @@ internal class TonClientImpl(
             isMain = true,
         )
     }
+
+    override fun validateAddress(scanned: String): String? =
+        try {
+            AddrStd(scanned).toString(userFriendly = true, testOnly = networkSwitcher.isTestnet)
+        } catch (t: Throwable) {
+            null
+        }
 }

@@ -2,7 +2,6 @@ package me.sulatskovalex.twallet.screens.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,9 +23,8 @@ import io.github.skeptick.libres.compose.painterResource
 import me.sulatskovalex.twallet.AppScreens
 import me.sulatskovalex.twallet.base.AlertButton
 import me.sulatskovalex.twallet.base.AlertDialog
-import me.sulatskovalex.twallet.base.BottomSheetHeader
-import me.sulatskovalex.twallet.base.SafeAreaDialogScreen
 import me.sulatskovalex.twallet.base.SafeAreaScreen
+import me.sulatskovalex.twallet.base.showScanQRDialog
 import me.sulatskovalex.twallet.common.Res
 import me.sulatskovalex.twallet.providers.appColors
 import me.sulatskovalex.twallet.screens.home.assets.AssetsScreen
@@ -36,7 +34,6 @@ import ru.alexgladkov.odyssey.compose.controllers.ModalController
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.AlertConfiguration
-import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConfiguration
 import ru.alexgladkov.odyssey.core.LaunchFlag
 
 @Composable
@@ -109,23 +106,18 @@ fun HomeScreen(
                     HomeTab.Home ->
                         AssetsScreen(
                             onSendClick = {
-                                modalController.present(
-                                    ModalSheetConfiguration()
-                                ) { key ->
-                                    SafeAreaDialogScreen {
-                                        Column {
-                                            BottomSheetHeader { modalController.popBackStack(key) }
-                                            AlertDialog(
-                                                "qwqwqewqeqeq",
-                                                "qwqwqewqeqeqqwqwqewqeqeqqwqwqewqeqeqqwqwqewqeqeq",
-                                                AlertButton(
-                                                    "qwqwqe",
-                                                    appColors.secondaryText
-                                                ) { modalController.popBackStack(key) }
-                                            )
-                                        }
-                                    }
-                                }
+                                modalController.showSendDialog(
+                                    onScanClick = { onAddressScanned ->
+                                        modalController.showScanQRDialog(
+                                            onScan = { scanned, onClose ->
+                                                val address = viewModel.validateAddress(scanned)
+                                                if (address != null) {
+                                                    onAddressScanned.invoke(address)
+                                                    onClose.invoke()
+                                                }
+                                            },
+                                        )
+                                    })
                             },
                             onReceiveClick = { addressFriendly ->
                                 modalController.showReceiveDialog(

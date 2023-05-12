@@ -14,4 +14,7 @@ class HomeViewModel(
             onComplete.invoke()
         }
     }
+
+    fun validateAddress(scanned: String) =
+        repository.validateAddress(scanned)
 }
