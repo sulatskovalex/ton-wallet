@@ -21,7 +21,7 @@ fun MainView(activity: ComponentActivity) =
                 backgroundColor = appColors.background,
                 navigationBarColor = appColors.primary.copy(alpha = .5f).toArgb(),
                 statusBarColor = appColors.primary.copy(alpha = .5f).toArgb(),
-                displayType = DisplayType.FullScreen,
+                displayType = DisplayType.EdgeToEdge,
             )
         },
         displaySize = LocalConfiguration.current.let {

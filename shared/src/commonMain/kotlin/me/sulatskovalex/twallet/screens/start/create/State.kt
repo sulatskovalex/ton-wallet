@@ -31,6 +31,7 @@ data class State(
 
     fun randomWords(words: List<String>): State =
         copy(
+            isLoadingWords = true,
             randomWords = words,
         )
 

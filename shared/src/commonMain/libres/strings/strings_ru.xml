@@ -17,4 +17,6 @@
     <string name="confirm_words_saved_title">Внимание</string>
     <string name="confirm_words_saved_message">Вы уверены?</string>
     <string name="ok">Да</string>
+    <string name="copy">Копировать</string>
+    <string name="share">Поделиться</string>
 </resources>

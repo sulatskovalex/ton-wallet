@@ -17,4 +17,6 @@
     <string name="confirm_words_saved_title">Attention</string>
     <string name="confirm_words_saved_message">Are you sure?</string>
     <string name="ok">Ok</string>
+    <string name="copy">Copy</string>
+    <string name="share">Share</string>
 </resources>
