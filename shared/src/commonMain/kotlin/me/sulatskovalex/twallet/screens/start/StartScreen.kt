@@ -13,12 +13,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
-import io.github.skeptick.libres.compose.painterResource
 import me.sulatskovalex.twallet.AppScreens
 import me.sulatskovalex.twallet.base.Button
 import me.sulatskovalex.twallet.base.OutlinedButton
 import me.sulatskovalex.twallet.base.SafeAreaScreen
+import me.sulatskovalex.twallet.base.tonIcon
 import me.sulatskovalex.twallet.common.Res
 import me.sulatskovalex.twallet.providers.appColors
 import ru.alexgladkov.odyssey.compose.RootController
@@ -36,7 +37,7 @@ fun StartScreen(
         ) {
             Image(
                 modifier = Modifier.size(120.dp).align(Alignment.Center),
-                painter = painterResource(Res.image.ic_ton),
+                painter = rememberVectorPainter(tonIcon),
                 contentDescription = null,
             )
             Column(

@@ -15,7 +15,7 @@ class SplashViewModel(
         viewModelScope.launch {
             listOf(
                 async {
-                    delay(500)
+                    delay(1000)
                     false
                 },
                 async {
