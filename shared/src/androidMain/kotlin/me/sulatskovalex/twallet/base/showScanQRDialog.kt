@@ -15,10 +15,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,8 +50,6 @@ import kotlin.math.roundToInt
 actual fun ModalController.showScanQRDialog(onScan: (scanned: String, onClose: () -> Unit) -> Unit) =
     present(ModalSheetConfiguration(cornerRadius = 8)) { key ->
         Column(Modifier.fillMaxSize().background(appColors.surface)) {
-            BottomSheetHeader { popBackStack(key) }
-            Spacer(Modifier.height(16.dp))
             val context = LocalContext.current
             val lifecycleOwner = LocalLifecycleOwner.current
             val isCameraEnabled = remember {
@@ -64,6 +61,11 @@ actual fun ModalController.showScanQRDialog(onScan: (scanned: String, onClose: (
                 )
             }
             val cameraProviderFeature = remember { ProcessCameraProvider.getInstance(context) }
+            DisposableEffect(cameraProviderFeature) {
+                onDispose {
+                    cameraProviderFeature.get().unbindAll()
+                }
+            }
             val permission = rememberLauncherForActivityResult(
                 ActivityResultContracts.RequestPermission()
             ) { granted ->
@@ -152,6 +154,7 @@ actual fun ModalController.showScanQRDialog(onScan: (scanned: String, onClose: (
                             )
                         }
                 )
+                BottomSheetHeader { popBackStack(key) }
             }
         }
     }

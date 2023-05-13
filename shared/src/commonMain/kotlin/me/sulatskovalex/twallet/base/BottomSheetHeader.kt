@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import me.sulatskovalex.twallet.common.Res
 import me.sulatskovalex.twallet.providers.appColors
 
 @Composable
@@ -34,7 +35,7 @@ fun BottomSheetHeader(onCloseClick: () -> Unit) {
             onClick = onCloseClick,
         ) {
             Icon(
-                contentDescription = "Close",
+                contentDescription = Res.string.close,
                 imageVector = Icons.Default.Close,
                 tint = appColors.primaryText,
             )
