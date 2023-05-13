@@ -42,7 +42,7 @@ inline fun ModalController.showReceiveDialog(
     ) { key ->
         Column(Modifier.background(appColors.surface)) {
             BottomSheetHeader { popBackStack(key) }
-            val width = (displaySize.widthDp / 1.5).dp
+            val width = (displaySize.widthDp / 1.3).dp
             Column(
                 modifier = Modifier
                     .width(width)
@@ -51,25 +51,26 @@ inline fun ModalController.showReceiveDialog(
                     .padding(all = 16.dp),
             ) {
                 Text(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     text = "Scan QR code to receive coins",
                     color = appColors.secondaryText,
                     fontSize = 16.sp,
                 )
                 Spacer(Modifier.height(8.dp))
+                val imageSize = width - 32.dp
                 Image(
                     modifier = Modifier
-                        .size(width - 32.dp)
+                        .size(imageSize)
                         .clip(RoundedCornerShape(8.dp)),
                     painter = rememberQrBitmapPainter(
                         content = addressFriendly,
-                        150.dp
+                        imageSize,
                     ),
                     contentDescription = "qr",
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     text = "Or use wallet address",
                     color = appColors.secondaryText,
                     fontSize = 16.sp,

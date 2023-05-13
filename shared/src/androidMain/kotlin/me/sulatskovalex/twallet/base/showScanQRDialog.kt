@@ -76,7 +76,7 @@ actual fun ModalController.showScanQRDialog(onScan: (scanned: String, onClose: (
             Box(
                 modifier = Modifier.fillMaxSize()
             ) {
-                val boxSizeDp = displaySize.widthDp / 1.5f
+                val boxSizeDp = displaySize.widthDp / 1.3f
                 val boxSize = boxSizeDp * LocalDensity.current.density
                 if (isCameraEnabled.value) {
                     val previewSizeDp: Dp = (displaySize.widthDp.dp - 56.dp)
