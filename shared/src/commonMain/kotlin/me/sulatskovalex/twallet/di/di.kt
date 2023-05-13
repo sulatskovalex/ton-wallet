@@ -7,6 +7,7 @@ import me.sulatskovalex.twallet.remote.di.remoteModule
 import me.sulatskovalex.twallet.screens.SplashViewModel
 import me.sulatskovalex.twallet.screens.home.HomeViewModel
 import me.sulatskovalex.twallet.screens.home.assets.AssetsViewModel
+import me.sulatskovalex.twallet.screens.home.dialogs.send.SendViewModel
 import me.sulatskovalex.twallet.screens.home.settings.SettingsViewModel
 import me.sulatskovalex.twallet.screens.start.StartViewModel
 import me.sulatskovalex.twallet.screens.start.create.CreateWalletViewModel
@@ -37,6 +38,7 @@ object TWalletDI {
                     factory { CreateWalletViewModel(get()) }
                     factory { HomeViewModel(get()) }
                     factory { AssetsViewModel(get()) }
+                    factory { SendViewModel(get()) }
                     factory { SettingsViewModel() }
                 },
             )

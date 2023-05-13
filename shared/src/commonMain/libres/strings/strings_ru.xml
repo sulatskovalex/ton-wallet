@@ -9,7 +9,7 @@
     <string name="retry">Повторить</string>
     <string name="next">Продолжить</string>
     <string name="menu_wallet">Кошелёк</string>
-    <string name="close">Close</string>
+    <string name="close">Закрыть</string>
     <string name="menu_settings">Настройки</string>
     <string name="disconnect_wallet">Отключить кошелёк</string>
     <string name="disconnect">Отключить</string>
@@ -22,4 +22,7 @@
     <string name="copy">Копировать</string>
     <string name="share">Поделиться</string>
     <string name="wallet_address_or_domain">Адрес кошелька или домен</string>
+    <string name="comment_memo">Комментарий(memo)</string>
+    <string name="continue_btn">Продолжить</string>
+    <string name="send_btn">Отправить</string>
 </resources>

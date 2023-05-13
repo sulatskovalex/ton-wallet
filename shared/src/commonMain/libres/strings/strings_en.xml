@@ -22,4 +22,7 @@
     <string name="copy">Copy</string>
     <string name="share">Share</string>
     <string name="wallet_address_or_domain">Wallet address or domain</string>
+    <string name="comment_memo">Comment(memo)</string>
+    <string name="continue_btn">Continue</string>
+    <string name="send_btn">Send</string>
 </resources>

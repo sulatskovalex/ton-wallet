@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -53,6 +54,7 @@ inline fun SafeAreaDialogScreen(
         when {
             platform.android ->
                 Box(Modifier.fillMaxWidth().height(48.dp).background(safeAreaColor))
+
             platform.iOS ->
                 Box(Modifier.fillMaxWidth().height(34.dp).background(safeAreaColor))
         }
@@ -62,8 +64,15 @@ inline fun SafeAreaDialogScreen(
 @Composable
 inline fun <reified T : KViewModel> Screen(
     noinline content: @Composable (T) -> Unit
-) =
-    StoredViewModel({ inject<T>() }, "", content)
+) {
+    val viewModel = remember { inject<T>() }
+    DisposableEffect(viewModel) {
+        onDispose {
+            viewModel.clear()
+        }
+    }
+    StoredViewModel({ viewModel }, "", content)
+}
 
 inline fun <reified T> MutableState<T>.update(updater: (T) -> T) {
     value = updater.invoke(this.value)

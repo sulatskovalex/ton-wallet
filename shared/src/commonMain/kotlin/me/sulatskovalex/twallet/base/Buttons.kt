@@ -44,6 +44,7 @@ inline fun Button(
     text: String,
     backgroundColor: Color = appColors.buttonBackground,
     textColor: Color = appColors.buttonText,
+    isEnabled: Boolean = true,
     noinline onClick: () -> Unit,
 ) =
     androidx.compose.material.Button(
@@ -51,7 +52,8 @@ inline fun Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             backgroundColor = backgroundColor,
-        )
+        ),
+        enabled = isEnabled,
     ) {
         Text(
             text = text,

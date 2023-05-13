@@ -28,6 +28,9 @@ import me.sulatskovalex.twallet.base.showScanQRDialog
 import me.sulatskovalex.twallet.common.Res
 import me.sulatskovalex.twallet.providers.appColors
 import me.sulatskovalex.twallet.screens.home.assets.AssetsScreen
+import me.sulatskovalex.twallet.screens.home.dialogs.confirm_send.showConfirmSendScreen
+import me.sulatskovalex.twallet.screens.home.dialogs.receive.showReceiveDialog
+import me.sulatskovalex.twallet.screens.home.dialogs.send.showSendDialog
 import me.sulatskovalex.twallet.screens.home.settings.SettingsScreen
 import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.compose.controllers.ModalController
@@ -117,7 +120,16 @@ fun HomeScreen(
                                                 }
                                             },
                                         )
-                                    })
+                                    },
+                                    onContinueClick = { address, amount, comment, onComplete ->
+                                        modalController.showConfirmSendScreen(
+                                            address = address,
+                                            amount = amount,
+                                            comment = comment,
+                                            onComplete = onComplete,
+                                        )
+                                    },
+                                )
                             },
                             onReceiveClick = { addressFriendly ->
                                 modalController.showReceiveDialog(
@@ -131,13 +143,15 @@ fun HomeScreen(
                             onExitClick = {
                                 modalController.showDisconnectWalletDialog(
                                     onDisconnectOkClick = { key ->
-                                        viewModel.onExitClick {
-                                            modalController.popBackStack(key)
-                                            controller.launch(
-                                                screen = AppScreens.Splash.name,
-                                                launchFlag = LaunchFlag.SingleNewTask,
-                                            )
-                                        }
+                                        viewModel.onExitClick(
+                                            onComplete = {
+                                                modalController.popBackStack(key)
+                                                controller.launch(
+                                                    screen = AppScreens.Splash.name,
+                                                    launchFlag = LaunchFlag.SingleNewTask,
+                                                )
+                                            },
+                                        )
                                     },
                                 )
                             }
