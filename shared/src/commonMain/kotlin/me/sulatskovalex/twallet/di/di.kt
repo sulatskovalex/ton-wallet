@@ -31,7 +31,7 @@ object TWalletDI {
             )
             modules(
                 module {
-                    single { WalletRepository(get(), get()) }
+                    single { WalletRepository(get(), get(), get()) }
                     factory { SplashViewModel(get()) }
                     factory { StartViewModel() }
                     factory { InputSeedViewModel(get()) }

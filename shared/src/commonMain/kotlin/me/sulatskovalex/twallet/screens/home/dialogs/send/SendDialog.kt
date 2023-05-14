@@ -53,6 +53,7 @@ import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConf
 inline fun ModalController.showSendDialog(
     noinline onScanClick: (onAddressScanned: (String) -> Unit) -> Unit,
     noinline onContinueClick: (address: String, amount: String, comment: String, onComplete: () -> Unit) -> Unit,
+    noinline onComplete: () -> Unit,
 ) =
     present(
         ModalSheetConfiguration(cornerRadius = 8)
@@ -216,6 +217,7 @@ inline fun ModalController.showSendDialog(
                                 state.value.comment.text
                             ) {
                                 popBackStack(key)
+                                onComplete.invoke()
                             }
                         }
                     )

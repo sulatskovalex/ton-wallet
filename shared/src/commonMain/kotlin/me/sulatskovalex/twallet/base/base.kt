@@ -20,9 +20,11 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.adeo.kviewmodel.KViewModel
 import com.adeo.kviewmodel.odyssey.StoredViewModel
+import com.adeo.kviewmodel.odyssey.setupWithViewModels
 import me.sulatskovalex.twallet.domain.common.inject
 import me.sulatskovalex.twallet.providers.appColors
 import me.sulatskovalex.twallet.providers.platform
+import ru.alexgladkov.odyssey.compose.local.LocalRootController
 
 @Composable
 inline fun <reified T : KViewModel> SafeAreaScreen(
@@ -46,7 +48,7 @@ inline fun SafeAreaDialogScreen(
     backgroundColor: Color = appColors.surface,
     safeAreaColor: Color = appColors.background,
     noinline content: @Composable () -> Unit,
-) {
+) =
     Column(Modifier.fillMaxWidth().background(backgroundColor)) {
         Box(Modifier.fillMaxWidth()) {
             content.invoke()
@@ -59,18 +61,14 @@ inline fun SafeAreaDialogScreen(
                 Box(Modifier.fillMaxWidth().height(34.dp).background(safeAreaColor))
         }
     }
-}
+
 
 @Composable
 inline fun <reified T : KViewModel> Screen(
     noinline content: @Composable (T) -> Unit
 ) {
     val viewModel = remember { inject<T>() }
-    DisposableEffect(viewModel) {
-        onDispose {
-            viewModel.clear()
-        }
-    }
+    LocalRootController.current.setupWithViewModels()
     StoredViewModel({ viewModel }, "", content)
 }
 

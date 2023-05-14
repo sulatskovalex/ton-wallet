@@ -17,4 +17,10 @@ class HomeViewModel(
 
     fun validateAddress(scanned: String) =
         repository.validateAddress(scanned)
+
+    fun updateWalletInfo() {
+        viewModelScope.launch {
+            repository.updateWalletInfo()
+        }
+    }
 }

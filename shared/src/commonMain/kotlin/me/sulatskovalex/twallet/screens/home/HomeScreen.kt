@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -46,6 +47,9 @@ fun HomeScreen(
 ) {
     SafeAreaScreen<HomeViewModel>(appColors.surface) { viewModel ->
         val selectedTab = remember { mutableStateOf(HomeTab.Home) }
+        LaunchedEffect(viewModel) {
+            viewModel.updateWalletInfo()
+        }
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             scaffoldState = rememberScaffoldState(),
@@ -129,6 +133,9 @@ fun HomeScreen(
                                             onComplete = onComplete,
                                         )
                                     },
+                                    onComplete = {
+                                        viewModel.updateWalletInfo()
+                                    }
                                 )
                             },
                             onReceiveClick = { addressFriendly ->

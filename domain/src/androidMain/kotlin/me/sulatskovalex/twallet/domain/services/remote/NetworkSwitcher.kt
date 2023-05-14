@@ -4,16 +4,16 @@ import android.content.Context
 
 actual class NetworkSwitcher(context: Context) {
     private val prefs = context.getSharedPreferences(NETWORK_SWITCHER_PREFS, Context.MODE_PRIVATE)
-    private val listeners = mutableSetOf<Listener>()
+    private val listeners = mutableSetOf<NetworkSwitcherListener>()
 
     actual var isTestnet: Boolean
-        get() = prefs.getBoolean(IS_TESTNET_KEY, false)
+        get() = prefs.getBoolean(IS_TESTNET_KEY, true)
         set(value) {
             prefs.edit().putBoolean(IS_TESTNET_KEY, value).apply()
             notify(value)
         }
 
-    actual fun watch(listener: Listener) {
+    actual fun watch(listener: NetworkSwitcherListener) {
         listeners.add(listener)
     }
 

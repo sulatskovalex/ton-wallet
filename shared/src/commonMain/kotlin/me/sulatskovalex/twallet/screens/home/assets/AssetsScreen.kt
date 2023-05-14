@@ -8,11 +8,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -30,7 +31,7 @@ fun AssetsScreen(
         LaunchedEffect(viewModel) {
             viewModel.onLaunch()
         }
-        val walletInfo = remember { viewModel.walletInfo }
+        val walletInfo = viewModel.walletInfo.value
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -38,16 +39,23 @@ fun AssetsScreen(
                 .padding(16.dp),
         ) {
             Spacer(Modifier.height(24.dp))
-            Text(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = walletInfo.value.amount,
-                color = appColors.primaryText,
-                fontSize = 36.sp,
-            )
+            Row(Modifier.align(Alignment.CenterHorizontally)) {
+                Text(
+                    modifier = Modifier.align(Alignment.CenterVertically),
+                    text = walletInfo.amount,
+                    color = appColors.primaryText,
+                    fontSize = 36.sp,
+                )
+                if (walletInfo.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(16.dp).align(Alignment.CenterVertically)
+                    )
+                }
+            }
             Spacer(Modifier.height(16.dp))
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = walletInfo.value.shortAddress,
+                text = walletInfo.shortAddress,
                 color = appColors.primaryText,
                 fontSize = 18.sp,
             )
@@ -61,7 +69,7 @@ fun AssetsScreen(
                 OutlinedButton(
                     modifier = Modifier.weight(1f),
                     text = "Receive",
-                    onClick = { onReceiveClick.invoke(walletInfo.value.address) },
+                    onClick = { onReceiveClick.invoke(walletInfo.address) },
                 )
                 Spacer(Modifier.width(32.dp))
                 OutlinedButton(

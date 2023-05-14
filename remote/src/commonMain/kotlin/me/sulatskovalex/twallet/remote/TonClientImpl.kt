@@ -3,6 +3,7 @@ package me.sulatskovalex.twallet.remote
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import me.sulatskovalex.twallet.domain.models.Wallet
+import me.sulatskovalex.twallet.domain.models.WalletInfo
 import me.sulatskovalex.twallet.domain.services.remote.NetworkSwitcher
 import me.sulatskovalex.twallet.domain.services.remote.TonClient
 import org.ton.api.pub.PublicKeyEd25519
@@ -14,7 +15,8 @@ import org.ton.mnemonic.Mnemonic
 import kotlin.random.Random
 
 internal class TonClientImpl(
-    private val networkSwitcher: NetworkSwitcher
+    private val networkSwitcher: NetworkSwitcher,
+    private val tonLiteClient: TonLiteClient,
 ) : TonClient {
 
     override suspend fun randomWords(): List<String> =
@@ -59,4 +61,7 @@ internal class TonClientImpl(
         } catch (t: Throwable) {
             null
         }
+
+    override suspend fun getAccountInfo(address: String): Result<WalletInfo> =
+        tonLiteClient.loadAccountInfo(address)
 }

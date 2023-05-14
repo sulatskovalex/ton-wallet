@@ -2,9 +2,13 @@ package me.sulatskovalex.twallet.domain.services.remote
 
 import platform.Foundation.NSUserDefaults
 
-actual class NetworkSwitcher() {
+actual class NetworkSwitcher {
     private val defaults = NSUserDefaults.standardUserDefaults()
-    private val listeners = mutableSetOf<Listener>()
+    private val listeners = mutableSetOf<NetworkSwitcherListener>()
+
+    init {
+        defaults.registerDefaults(mapOf(IS_TESTNET_KEY to false))
+    }
 
     actual var isTestnet: Boolean
         get() = defaults.boolForKey(IS_TESTNET_KEY)
@@ -13,7 +17,7 @@ actual class NetworkSwitcher() {
             notify(value)
         }
 
-    actual fun watch(listener: Listener) {
+    actual fun watch(listener: NetworkSwitcherListener) {
         listeners.add(listener)
     }
 

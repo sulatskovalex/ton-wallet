@@ -4,10 +4,10 @@ expect class NetworkSwitcher {
 
     var isTestnet: Boolean
 
-    fun watch(listener: Listener)
+    fun watch(listener: NetworkSwitcherListener)
 
 }
 
-interface Listener {
+interface NetworkSwitcherListener {
     fun onNetworkChanged(isTestnet: Boolean)
 }
