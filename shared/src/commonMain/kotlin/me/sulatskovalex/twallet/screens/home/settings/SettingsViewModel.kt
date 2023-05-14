@@ -1,9 +1,16 @@
 package me.sulatskovalex.twallet.screens.home.settings
 
+import androidx.compose.runtime.mutableStateOf
 import com.adeo.kviewmodel.KViewModel
-import kotlinx.coroutines.launch
-import me.sulatskovalex.twallet.domain.repositories.WalletRepository
+import me.sulatskovalex.twallet.domain.services.remote.NetworkSwitcher
 
-class SettingsViewModel() : KViewModel() {
+class SettingsViewModel(
+    private val networkSwitcher: NetworkSwitcher,
+) : KViewModel() {
+    val isTestnetState = mutableStateOf(networkSwitcher.isTestnet)
 
+    fun switch(isTestnet: Boolean) {
+        networkSwitcher.isTestnet = isTestnet
+        isTestnetState.value = isTestnet
+    }
 }

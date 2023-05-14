@@ -39,7 +39,7 @@ object TWalletDI {
                     factory { HomeViewModel(get()) }
                     factory { AssetsViewModel(get()) }
                     factory { SendViewModel(get()) }
-                    factory { SettingsViewModel() }
+                    factory { SettingsViewModel(get()) }
                 },
             )
         }
