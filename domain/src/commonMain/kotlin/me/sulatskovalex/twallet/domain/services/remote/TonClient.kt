@@ -4,6 +4,7 @@ import me.sulatskovalex.twallet.domain.models.Wallet
 import me.sulatskovalex.twallet.domain.models.WalletInfo
 
 interface TonClient {
+    fun mnemonicWords(): List<String>
     suspend fun randomWords(): List<String>
     suspend fun generateWords(): List<String>
     suspend fun createWallet(words: List<String>): Wallet

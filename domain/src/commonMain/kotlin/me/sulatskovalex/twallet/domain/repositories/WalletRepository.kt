@@ -68,6 +68,9 @@ class WalletRepository(
         walletDatabase.deleteCurrentWallet()
     }
 
+    fun mnemonicWords(): List<String> =
+        tonClient.mnemonicWords()
+
     fun validateAddress(scanned: String): String? =
         tonClient.validateAddress(scanned)
 

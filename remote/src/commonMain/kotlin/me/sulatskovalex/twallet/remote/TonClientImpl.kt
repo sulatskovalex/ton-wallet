@@ -19,6 +19,9 @@ internal class TonClientImpl(
     private val tonLiteClient: TonLiteClient,
 ) : TonClient {
 
+    override fun mnemonicWords(): List<String> =
+        Mnemonic.mnemonicWords()
+
     override suspend fun randomWords(): List<String> =
         withContext(Dispatchers.Default) {
             buildList {
