@@ -42,13 +42,16 @@ fun AssetsScreen(
             Row(Modifier.align(Alignment.CenterHorizontally)) {
                 Text(
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    text = walletInfo.amount,
+                    text = walletInfo.amountFormatted,
                     color = appColors.primaryText,
                     fontSize = 36.sp,
                 )
+                Spacer(Modifier.width(16.dp))
                 if (walletInfo.isLoading) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(16.dp).align(Alignment.CenterVertically)
+                        modifier = Modifier.size(16.dp).align(Alignment.CenterVertically),
+                        strokeWidth = 2.dp,
+                        color = appColors.primary,
                     )
                 }
             }

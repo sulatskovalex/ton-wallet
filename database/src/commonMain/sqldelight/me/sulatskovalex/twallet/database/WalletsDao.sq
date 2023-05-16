@@ -16,11 +16,8 @@ SELECT accountAddressHex, accountAddressFriendly, amount, privateKey, publicKey,
 selectMainWallet:
 SELECT accountAddressHex, accountAddressFriendly, amount, privateKey, publicKey, isMain FROM wallets WHERE isMain = 1;
 
-selectMainWalletAddressHex:
-SELECT accountAddressHex FROM wallets WHERE isMain = 1;
-
-updateWallet:
-UPDATE wallets SET amount = ? WHERE accountAddressFriendly = ?;
+updateMainWallet:
+UPDATE wallets SET amount = ? WHERE isMain = 1;
 
 deleteWallet:
 DELETE FROM wallets WHERE accountAddressHex = ?;

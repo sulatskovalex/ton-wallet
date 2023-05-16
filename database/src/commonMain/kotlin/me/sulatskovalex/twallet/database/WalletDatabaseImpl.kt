@@ -22,7 +22,7 @@ class WalletDatabaseImpl(
         }
     }
 
-    override suspend fun selectMainWallet(): Wallet? =
+    override suspend fun selectWallet(): Wallet? =
         withContext(Dispatchers.Default) {
             walletsDao.selectMainWallet().executeAsOneOrNull()?.let { w ->
                 Wallet(
@@ -50,14 +50,9 @@ class WalletDatabaseImpl(
             }
         }
 
-    override suspend fun selectMainWalletAddress(): String? =
+    override suspend fun updateWallet(amount: Long) {
         withContext(Dispatchers.Default) {
-            walletsDao.selectMainWalletAddressHex().executeAsOneOrNull()
-        }
-
-    override suspend fun updateWallet(accountAddressHex: String, amount: Long) {
-        withContext(Dispatchers.Default) {
-            walletsDao.updateWallet(amount, accountAddressHex)
+            walletsDao.updateMainWallet(amount)
         }
     }
 

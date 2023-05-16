@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
-import me.sulatskovalex.twallet.domain.format
+import kotlinx.coroutines.launch
 import me.sulatskovalex.twallet.domain.models.WalletInfo
 import me.sulatskovalex.twallet.domain.services.local.WalletDatabase
 import me.sulatskovalex.twallet.domain.services.remote.NetworkSwitcher
@@ -27,11 +27,11 @@ class WalletRepository(
     private val scope = CoroutineScope(CoroutineName("WalletRepository") + SupervisorJob())
     private val _walletInfo = MutableStateFlow(WalletInfo())
     val walletInfo: SharedFlow<WalletInfo> = flow {
-            _walletInfo.collect {
-                val address = validateAddress(it.address) ?: it.address
-                emit(it.copy(address = address))
-            }
-        }.shareIn(scope, SharingStarted.WhileSubscribed(), 1)
+        _walletInfo.collect {
+            val address = validateAddress(it.address) ?: it.address
+            emit(it.copy(address = address))
+        }
+    }.shareIn(scope, SharingStarted.WhileSubscribed(), 1)
 
     suspend fun generateWords(): List<String> =
         tonClient.generateWords()
@@ -43,20 +43,20 @@ class WalletRepository(
         val wallet = tonClient.createWallet(words)
         _walletInfo.emit(
             WalletInfo(
-                address = wallet.accountAddressFriendly,
-                amount = wallet.amount.format()
+                address = wallet.accountAddressFriendly.withCurrentSettings(),
+                amount = wallet.amount,
             )
         )
         walletDatabase.insertWallet(wallet)
     }
 
     suspend fun isAnyWalletExists(): Boolean {
-        val wallet = walletDatabase.selectMainWallet()
+        val wallet = walletDatabase.selectWallet()
         if (wallet != null) {
             _walletInfo.emit(
                 WalletInfo(
-                    address = wallet.accountAddressFriendly,
-                    amount = wallet.amount.format()
+                    address = wallet.accountAddressFriendly.withCurrentSettings(),
+                    amount = wallet.amount,
                 )
             )
             return true
@@ -75,32 +75,43 @@ class WalletRepository(
         tonClient.validateAddress(scanned)
 
 
-    suspend fun updateWalletInfo() {
-        walletDatabase.selectMainWallet()?.let { wallet ->
-            _walletInfo.emit(
-                WalletInfo(
-                    address = wallet.accountAddressFriendly,
-                    amount = wallet.amount.format(),
-                    isLoading = true,
-                ),
-            )
-            tonClient.getAccountInfo(
-                wallet.accountAddressFriendly,
-            ).onSuccess {
-                _walletInfo.emit(it)
-            }.onFailure {
+    fun updateWalletInfo() {
+        scope.launch {
+            walletDatabase.selectWallet()?.let { wallet ->
                 _walletInfo.emit(
                     WalletInfo(
-                        address = wallet.accountAddressFriendly,
-                        amount = wallet.amount.format(),
+                        address = wallet.accountAddressFriendly.withCurrentSettings(),
+                        amount = wallet.amount,
+                        isLoading = true,
                     ),
                 )
+                tonClient.getAccountInfo(
+                    wallet.accountAddressFriendly.withCurrentSettings(),
+                ).onSuccess {
+                    walletDatabase.updateWallet(it.amount)
+                    _walletInfo.emit(it)
+                }.onFailure {
+                    walletDatabase.updateWallet(0)
+                    _walletInfo.emit(
+                        WalletInfo(
+                            address = wallet.accountAddressFriendly.withCurrentSettings(),
+                            amount = 0,
+                            isLoading = false
+                        ),
+                    )
+                }
             }
         }
     }
 
     override fun onNetworkChanged(isTestnet: Boolean) {
-        _walletInfo.value = _walletInfo.value.copy()
+        _walletInfo.value = _walletInfo.value.copy(amount = 0)
+        scope.launch {
+            walletDatabase.updateWallet(0L)
+            updateWalletInfo()
+        }
     }
+
+    private fun String.withCurrentSettings(): String = validateAddress(this) ?: this
 
 }

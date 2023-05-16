@@ -19,8 +19,6 @@ class HomeViewModel(
         repository.validateAddress(scanned)
 
     fun updateWalletInfo() {
-        viewModelScope.launch {
-            repository.updateWalletInfo()
-        }
+        repository.updateWalletInfo()
     }
 }

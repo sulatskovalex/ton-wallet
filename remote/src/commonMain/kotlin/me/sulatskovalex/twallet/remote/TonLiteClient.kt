@@ -11,7 +11,6 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import me.sulatskovalex.twallet.domain.format
 import me.sulatskovalex.twallet.domain.models.WalletInfo
 import me.sulatskovalex.twallet.domain.services.remote.NetworkSwitcher
 import me.sulatskovalex.twallet.domain.services.remote.NetworkSwitcherListener
@@ -107,14 +106,14 @@ class TonLiteClient(
                 val coins = account.storage.balance.coins
                 WalletInfo(
                     address = accountAddressFriendly,
-                    amount = coins.amount.toLong().format()
+                    amount = coins.amount.toLong(),
                 )
             }
 
             is AccountNone -> {
                 WalletInfo(
                     address = "",
-                    amount = "0",
+                    amount = 0L,
                 )
             }
         }
